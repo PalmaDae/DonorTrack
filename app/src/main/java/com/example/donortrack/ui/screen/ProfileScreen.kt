@@ -45,93 +45,27 @@ import com.example.donortrack.data.User
 import com.example.donortrack.data.bages
 import com.example.donortrack.data.donations
 import com.example.donortrack.data.testUser
+import com.example.donortrack.ui.theme.BlackHanSans
 import com.example.donortrack.ui.theme.DonorTrackTheme
 
-class ProfileScreen {
 
 
 
-    @Composable
-    fun ProfileApp() {
-        Scaffold { innerPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                item { UserInfo() }
-                item { UserBages() }
-                item { Spacer(modifier = Modifier.height(16.dp)) }
 
-                items(donations) {
-                    DonationInfoCard(
-                        donation = it,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
-            }
-        }
-    }
-
-
-    @Composable
-    fun DonationInfoCard(
-        modifier: Modifier = Modifier,
-        donation: Donation
-    ) {
-        Box(
+@Composable
+fun ProfileApp() {
+    Scaffold { innerPadding ->
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(modifier = modifier
-                .size(width = (200.dp), height = 45.dp),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(donation.dateOfDonation),
-                            style = MaterialTheme.typography.displayMedium
-                        )
-                        DonationIcon(
-                            donIcon = donation.typeOfDonation
-                        )
-                        DonationIcon(
-                            donIcon = donation.stageOfDonation
-                        )
-                    }
-                }
-            }
-        }
-    }
+            item { UserInfo() }
+            item { UserBages(bages as MutableList<Bage>) }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
 
-    @Composable
-    fun DonationIcon(
-        @DrawableRes donIcon: Int,
-        modifier: Modifier = Modifier
-    ) {
-        Image(
-            modifier = modifier,
-            contentScale = ContentScale.Crop,
-            painter = painterResource(donIcon),
-            contentDescription = null,
-        )
-    }
-
-    @Composable
-    fun DonationList(
-        list: MutableList<Donation>
-    )
-    {
-        LazyColumn {
-            items(list) {
+            items(donations) {
                 DonationInfoCard(
                     donation = it,
                     modifier = Modifier.padding(8.dp)
@@ -139,157 +73,207 @@ class ProfileScreen {
             }
         }
     }
+}
 
 
-    //Передавать данные для бейджа, а так картинки статичные, или сделать выбор значков в профиле
-    @Composable
-    fun UserBages(
-
+@Composable
+fun DonationInfoCard(
+    modifier: Modifier = Modifier,
+    donation: Donation
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+        Card(modifier = modifier
+            .size(width = (200.dp), height = 45.dp),
+            shape = RoundedCornerShape(8.dp)
         ) {
-            BageInfo(bage = bages[0])
-            BageInfo(bage = bages[1])
-            BageInfo(bage = bages[2])
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(donation.dateOfDonation),
+                        style = MaterialTheme.typography.displayMedium
+                    )
+                    DonationIcon(
+                        donIcon = donation.typeOfDonation
+                    )
+                    DonationIcon(
+                        donIcon = donation.stageOfDonation
+                    )
+                }
+            }
         }
     }
+}
 
-    @Composable
-    fun UserData(
-        user: User,
-        modifier: Modifier = Modifier
+@Composable
+fun DonationIcon(
+    @DrawableRes donIcon: Int,
+    modifier: Modifier = Modifier
+) {
+    Image(
+        modifier = modifier,
+        contentScale = ContentScale.Crop,
+        painter = painterResource(donIcon),
+        contentDescription = null,
+    )
+}
+
+//Передавать данные для бейджа, а так картинки статичные, или сделать выбор значков в профиле
+@Composable
+fun UserBages(
+    list: MutableList<Bage>
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+        list.forEach { BageInfo(it) }
+    }
+}
+
+@Composable
+fun UserData(
+    user: User,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    ) {
+        Image(
+            painter = painterResource(user.avatar),
+            contentDescription = null,
             modifier = modifier
-                .fillMaxWidth()
                 .padding(10.dp)
-        ) {
-            Image(
-                painter = painterResource(user.avatar),
-                contentDescription = null,
-                modifier = modifier
-                    .padding(10.dp)
-                    .clip(CircleShape)
-                    .size(190.dp)
-            )
-            Text(
-                text = stringResource(user.name),
-                fontSize = 25.sp
-            )
-            Text(
-                text = stringResource(user.bloodType),
-                fontSize = 25.sp
-            )
-        }
+                .clip(CircleShape)
+                .size(190.dp)
+        )
+        Text(
+            text = stringResource(user.name),
+            fontSize = 25.sp,
+            fontFamily = BlackHanSans
+        )
+        Text(
+            text = stringResource(user.bloodType),
+            fontSize = 25.sp,
+            fontFamily = BlackHanSans
+        )
     }
+}
 
-    @Composable
-    fun ProfileButtons() {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(
-                onClick = {},
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(R.string.redactProfile),
-                    textAlign = TextAlign.Center
-                )
-            }
-            Button(
-                onClick = {},
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stringResource(R.string.addDonation),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    }
-
-    @Composable
-    fun UserInfo() {
-        UserData(testUser)
-        ProfileButtons()
-        CountOfDonation()
-    }
-
-    @Composable
-    fun BageInfo(
-        bage: Bage,
-        modifier: Modifier = Modifier
+@Composable
+fun ProfileButtons() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Button(
+            onClick = {},
+            modifier = Modifier.weight(1f)
         ) {
-            Image(
-                modifier = modifier,
-                painter = painterResource(bage.bageIcon),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
             Text(
-                text = stringResource(bage.bageDescription)
+                text = stringResource(R.string.redactProfile),
+                textAlign = TextAlign.Center
+            )
+        }
+        Button(
+            onClick = {},
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = stringResource(R.string.addDonation),
+                textAlign = TextAlign.Center
             )
         }
     }
+}
 
-    @Composable
-    fun TypeOfDonation(
-        @DrawableRes bloodType: Int,
-        donationCount: Int,
-        modifier: Modifier = Modifier
+@Composable
+fun UserInfo() {
+    UserData(testUser)
+    ProfileButtons()
+    CountOfDonation()
+}
+
+@Composable
+fun BageInfo(
+    bage: Bage,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(bloodType),
-                contentDescription = null
-            )
-            Text(text = donationCount.toString())
-        }
+        Image(
+            modifier = modifier,
+            painter = painterResource(bage.bageIcon),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            text = stringResource(bage.bageDescription)
+        )
     }
+}
 
-    //Оставить иконки у всех одинаковые, передавать чисто кол-во донаций для каждого типа
-
-    @Composable
-    fun CountOfDonation() {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TypeOfDonation(R.drawable.blood, 3)
-            TypeOfDonation(R.drawable.plasma, 2)
-            TypeOfDonation(R.drawable.thrombocyte, 5)
-            TypeOfDonation(R.drawable.erythrocyte, 0)
-        }
+@Composable
+fun TypeOfDonation(
+    @DrawableRes bloodType: Int,
+    donationCount: Int,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(bloodType),
+            contentDescription = null
+        )
+        Text(text = donationCount.toString())
     }
+}
 
-    @Composable
-    @Preview
-    fun ProfileScreenPreviewDark() {
-        DonorTrackTheme(darkTheme = true) {
-            ProfileApp()
-        }
+//Оставить иконки у всех одинаковые, передавать чисто кол-во донаций для каждого типа
+
+@Composable
+fun CountOfDonation() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TypeOfDonation(R.drawable.blood, 3)
+        TypeOfDonation(R.drawable.plasma, 2)
+        TypeOfDonation(R.drawable.thrombocyte, 5)
+        TypeOfDonation(R.drawable.erythrocyte, 0)
     }
+}
 
-    @Composable
-    @Preview
-    fun ProfileScreenPreview() {
-        DonorTrackTheme {
-            ProfileApp()
-        }
+@Composable
+@Preview
+fun ProfileScreenPreviewDark() {
+    DonorTrackTheme(darkTheme = true) {
+        ProfileApp()
+    }
+}
+
+@Composable
+@Preview
+fun ProfileScreenPreview() {
+    DonorTrackTheme {
+        ProfileApp()
     }
 }

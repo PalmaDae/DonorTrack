@@ -15,6 +15,10 @@ val CooperBlack = FontFamily(
     Font(R.font.cooper_black, FontWeight.Normal)
 )
 
+val BlackHanSans = FontFamily(
+    Font(R.font.black_han_sans, FontWeight.Normal)
+)
+
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
