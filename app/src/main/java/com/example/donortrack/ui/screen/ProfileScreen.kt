@@ -1,11 +1,14 @@
 package com.example.donortrack.ui.screen
 
+import android.graphics.drawable.Icon
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,7 +34,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.donortrack.R
+import com.example.donortrack.data.Bage
 import com.example.donortrack.data.Donation
+import com.example.donortrack.data.bages
 import com.example.donortrack.data.donations
 import com.example.donortrack.ui.theme.DonorTrackTheme
 
@@ -41,7 +46,18 @@ class ProfileScreen {
 
     @Composable
     fun ProfileApp() {
-        DonationList()
+        Scaffold { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                UserInfo()
+                UserBages()
+                Spacer(modifier = Modifier.weight(2f))
+                DonationList(donations as MutableList<Donation>)
+            }
+        }
     }
 
 
@@ -52,7 +68,7 @@ class ProfileScreen {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
             Card(modifier = modifier
@@ -91,27 +107,65 @@ class ProfileScreen {
             modifier = modifier,
             contentScale = ContentScale.Crop,
             painter = painterResource(donIcon),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 
     @Composable
     fun DonationList(
-
+        list: MutableList<Donation>
     )
     {
-        Scaffold {
-                it ->
-            LazyColumn(contentPadding = it) {
-                items(donations) {
-                    DonationInfoCard(
-                        donation = it,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
+        LazyColumn {
+            items(list) {
+                DonationInfoCard(
+                    donation = it,
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
+    }
 
+
+
+    @Composable
+    fun UserBages(
+        
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            BageInfo(bage = bages[0])
+            BageInfo(bage = bages[1])
+            BageInfo(bage = bages[2])
+        }
+    }
+
+    @Composable
+    fun UserInfo() {
+
+    }
+
+    @Composable
+    fun BageInfo(
+        bage: Bage,
+        modifier: Modifier = Modifier
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = modifier,
+                painter = painterResource(bage.bageIcon),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                text = stringResource(bage.bageDescription)
+            )
+        }
     }
 
 
