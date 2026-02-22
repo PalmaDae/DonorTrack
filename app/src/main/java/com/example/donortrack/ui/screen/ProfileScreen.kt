@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,17 +29,22 @@ import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.donortrack.R
 import com.example.donortrack.data.Bage
 import com.example.donortrack.data.Donation
+import com.example.donortrack.data.User
 import com.example.donortrack.data.bages
 import com.example.donortrack.data.donations
+import com.example.donortrack.data.testUser
 import com.example.donortrack.ui.theme.DonorTrackTheme
 
 class ProfileScreen {
@@ -47,15 +54,22 @@ class ProfileScreen {
     @Composable
     fun ProfileApp() {
         Scaffold { innerPadding ->
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                UserInfo()
-                UserBages()
-                Spacer(modifier = Modifier.weight(2f))
-                DonationList(donations as MutableList<Donation>)
+                item { UserInfo() }
+                item { UserBages() }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+
+                items(donations) {
+                    DonationInfoCard(
+                        donation = it,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
         }
     }
@@ -127,10 +141,10 @@ class ProfileScreen {
     }
 
 
-
+    //Передавать данные для бейджа, а так картинки статичные, или сделать выбор значков в профиле
     @Composable
     fun UserBages(
-        
+
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -144,8 +158,70 @@ class ProfileScreen {
     }
 
     @Composable
-    fun UserInfo() {
+    fun UserData(
+        user: User,
+        modifier: Modifier = Modifier
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            Image(
+                painter = painterResource(user.avatar),
+                contentDescription = null,
+                modifier = modifier
+                    .padding(10.dp)
+                    .clip(CircleShape)
+                    .size(190.dp)
+            )
+            Text(
+                text = stringResource(user.name),
+                fontSize = 25.sp
+            )
+            Text(
+                text = stringResource(user.bloodType),
+                fontSize = 25.sp
+            )
+        }
+    }
 
+    @Composable
+    fun ProfileButtons() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = {},
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stringResource(R.string.redactProfile),
+                    textAlign = TextAlign.Center
+                )
+            }
+            Button(
+                onClick = {},
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stringResource(R.string.addDonation),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+
+    @Composable
+    fun UserInfo() {
+        UserData(testUser)
+        ProfileButtons()
+        CountOfDonation()
     }
 
     @Composable
@@ -168,6 +244,38 @@ class ProfileScreen {
         }
     }
 
+    @Composable
+    fun TypeOfDonation(
+        @DrawableRes bloodType: Int,
+        donationCount: Int,
+        modifier: Modifier = Modifier
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(bloodType),
+                contentDescription = null
+            )
+            Text(text = donationCount.toString())
+        }
+    }
+
+    //Оставить иконки у всех одинаковые, передавать чисто кол-во донаций для каждого типа
+
+    @Composable
+    fun CountOfDonation() {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TypeOfDonation(R.drawable.blood, 3)
+            TypeOfDonation(R.drawable.plasma, 2)
+            TypeOfDonation(R.drawable.thrombocyte, 5)
+            TypeOfDonation(R.drawable.erythrocyte, 0)
+        }
+    }
 
     @Composable
     @Preview
