@@ -1,4 +1,4 @@
-package com.example.donortrack.data
+package com.example.donortrack.data.model
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
