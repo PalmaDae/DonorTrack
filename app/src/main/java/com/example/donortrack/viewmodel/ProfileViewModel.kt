@@ -1,4 +1,8 @@
 package com.example.donortrack.viewmodel
 
-class ProfileViewModel {
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+
+class ProfileViewModel : ViewModel() {
+
 }
