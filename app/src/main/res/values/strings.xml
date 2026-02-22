@@ -27,4 +27,6 @@
     
     <string name="redactProfile">Редактировать Профиль</string>
     <string name="addDonation">Добавить Донацию</string>
+
+    <string name="fact1">Пиво лучше запивать водкой</string>
 </resources>

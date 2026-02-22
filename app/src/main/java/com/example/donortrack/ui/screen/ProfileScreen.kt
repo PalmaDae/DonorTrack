@@ -54,25 +54,24 @@ import com.example.donortrack.ui.theme.DonorTrackTheme
 
 @Composable
 fun ProfileApp() {
-    Scaffold { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item { UserInfo() }
-            item { UserBages(bages as MutableList<Bage>) }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        item { UserInfo() }
+        item { UserBages(bages as MutableList<Bage>) }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
 
-            items(donations) {
-                DonationInfoCard(
-                    donation = it,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
+        items(donations) {
+            DonationInfoCard(
+                donation = it,
+                modifier = Modifier.padding(8.dp)
+            )
         }
     }
+
 }
 
 
