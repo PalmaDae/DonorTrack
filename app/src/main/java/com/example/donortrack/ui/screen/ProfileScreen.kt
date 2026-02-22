@@ -31,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.donortrack.R
 import com.example.donortrack.data.model.Bage
 import com.example.donortrack.data.model.Donation
@@ -40,20 +42,18 @@ import com.example.donortrack.data.model.donations
 import com.example.donortrack.data.model.testUser
 import com.example.donortrack.ui.theme.BlackHanSans
 import com.example.donortrack.ui.theme.DonorTrackTheme
-
-
-
+import com.example.donortrack.util.navigation.Routes
 
 
 @Composable
-fun ProfileApp() {
+fun ProfileApp(navController: NavController = rememberNavController()) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item { UserInfo() }
+        item { UserInfo(navController = navController) }
         item { UserBages(bages as MutableList<Bage>) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
@@ -165,7 +165,7 @@ fun UserData(
 }
 
 @Composable
-fun ProfileButtons() {
+fun ProfileButtons(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,7 +174,7 @@ fun ProfileButtons() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Button(
-            onClick = {},
+            onClick = { navController.navigate(Routes.EditProfile.route) },
             modifier = Modifier.weight(1f)
         ) {
             Text(
@@ -195,9 +195,9 @@ fun ProfileButtons() {
 }
 
 @Composable
-fun UserInfo() {
+fun UserInfo(navController: NavController) {
     UserData(testUser)
-    ProfileButtons()
+    ProfileButtons(navController)
     CountOfDonation()
 }
 

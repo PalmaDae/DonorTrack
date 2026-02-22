@@ -28,6 +28,10 @@
     <string name="redactProfile">Редактировать Профиль</string>
     <string name="addDonation">Добавить Донацию</string>
 
+    <string name="changeBloodType">Сменить группу крови</string>
+    <string name="changeName">Сменить имя</string>
+    <string name="saveProfile">Сохранить</string>
+
     <string-array name="facts_quotes">
         <item>Одна донация крови может спасти до трёх жизней.</item>
         <item>Сдача крови занимает около 10–15 минут.</item>
