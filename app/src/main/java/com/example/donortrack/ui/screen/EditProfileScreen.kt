@@ -18,6 +18,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -74,6 +75,7 @@ fun EditButtons(
     onBloodChange: (BloodType) -> Unit
 ) {
     var showBloodDropDown by remember { mutableStateOf(false) }
+    var nameNow by remember { mutableStateOf(uiState.user.name) }
 
     Column(modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,11 +101,10 @@ fun EditButtons(
         Text(
             text = uiState.user.name
         )
-        Button(onClick = {}) {
-            Text(
-                text = stringResource(R.string.changeName)
-            )
-        }
+        ChangeNameButton(nameNow = nameNow, onNameChange = { newName ->
+            nameNow = newName
+            onNameChange(newName)
+        })
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -145,9 +146,15 @@ fun DropDownBlood(
 
 @Composable
 fun ChangeNameButton(
+    nameNow: String,
     onNameChange: (String) -> Unit
 ) {
-
+    OutlinedTextField(
+        value = nameNow,
+        label = { Text("Name") },
+        onValueChange = { onNameChange(it) },
+        singleLine = true
+    )
 }
 
 @Composable
