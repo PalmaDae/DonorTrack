@@ -67,7 +67,7 @@ fun ProfileApp(
         item { UserBages(bages as MutableList<Bage>) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
-        items(donations) {
+        items(viewModel.donations) {
             DonationInfoCard(
                 donation = it,
                 modifier = Modifier.padding(8.dp)

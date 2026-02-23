@@ -14,12 +14,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,11 +32,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.donortrack.R
+import com.example.donortrack.data.model.BloodType
 import com.example.donortrack.data.model.User
+import com.example.donortrack.state.ProfileUiState
 import com.example.donortrack.ui.theme.DonorTrackTheme
 import com.example.donortrack.viewmodel.ProfileViewModel
 
@@ -40,7 +48,7 @@ fun EditProfileApp(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = viewModel()
 ) {
-    val viewModel by viewModel.profileUiState.collectAsState()
+    val uiState by viewModel.profileUiState.collectAsState()
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -49,25 +57,24 @@ fun EditProfileApp(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = 60.dp),
-            user = viewModel.user
+            uiState = uiState,
+            onNameChange = viewModel::nameUpdate,
+            onAvatarChange = viewModel::avatarUpdate,
+            onBloodChange = viewModel::bloodTypeUpdate
         )
-
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-        ) {
-            Text(text = stringResource(R.string.saveProfile))
-        }
     }
 }
 
 @Composable
 fun EditButtons(
     modifier: Modifier = Modifier,
-    user: User
+    uiState: ProfileUiState,
+    onNameChange: (String) -> Unit,
+    onAvatarChange: (String) -> Unit,
+    onBloodChange: (BloodType) -> Unit
 ) {
+    var showBloodDropDown by remember { mutableStateOf(false) }
+
     Column(modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -79,7 +86,7 @@ fun EditButtons(
                 .clickable {  }
         ) {
             Image(
-                user.avatarUri?.let { rememberAsyncImagePainter(user.avatarUri) } ?: painterResource(user.avatar),
+                uiState.user.avatarUri?.let { rememberAsyncImagePainter(uiState.user.avatarUri) } ?: painterResource(uiState.user.avatar),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -90,7 +97,7 @@ fun EditButtons(
 
 
         Text(
-            text = user.name
+            text = uiState.user.name
         )
         Button(onClick = {}) {
             Text(
@@ -99,16 +106,47 @@ fun EditButtons(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {}) {
-            Text(
-                text = stringResource(R.string.changeBloodType)
+
+        Button(onClick = { showBloodDropDown = true }) {
+            Text(text = stringResource(uiState.user.bloodType.titleRes))
+        }
+
+        DropDownBlood(
+            expanded = showBloodDropDown,
+            onBloodChange = onBloodChange,
+            onDismissRequest = { showBloodDropDown = false }
+        )
+
+    }
+}
+
+@Composable
+fun DropDownBlood(
+    expanded: Boolean,
+    onBloodChange: (BloodType) -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        offset = DpOffset(x = 0.dp, y = 0.dp)
+    ) {
+        BloodType.values().forEach { type ->
+            DropdownMenuItem(
+                text = { Text ( stringResource(type.titleRes)) },
+                onClick = {
+                    onBloodChange(type)
+                    onDismissRequest()
+                }
             )
         }
     }
 }
 
 @Composable
-fun ChangeNameButton() {
+fun ChangeNameButton(
+    onNameChange: (String) -> Unit
+) {
 
 }
 
