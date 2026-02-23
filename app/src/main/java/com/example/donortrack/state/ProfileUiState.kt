@@ -6,6 +6,6 @@ import com.example.donortrack.data.model.User
 
 data class ProfileUiState(
     val user: User = User(),
-    val bages: MutableList<Bage> = mutableListOf(),
-    val donations: MutableList<Donation> = mutableListOf()
+    val bages: List<Bage> = emptyList(),
+    val donations: List<Donation> = emptyList()
 )

@@ -18,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,18 +28,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.donortrack.R
+import com.example.donortrack.data.model.User
 import com.example.donortrack.ui.theme.DonorTrackTheme
+import com.example.donortrack.viewmodel.ProfileViewModel
 
 @Composable
-fun EditProfileApp(modifier: Modifier = Modifier) {
+fun EditProfileApp(
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = viewModel()
+) {
+    val viewModel by viewModel.profileUiState.collectAsState()
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
         EditButtons(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 60.dp)
+                .padding(top = 60.dp),
+            user = viewModel.user
         )
 
         Button(
@@ -53,7 +65,8 @@ fun EditProfileApp(modifier: Modifier = Modifier) {
 
 @Composable
 fun EditButtons(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    user: User
 ) {
     Column(modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +79,7 @@ fun EditButtons(
                 .clickable {  }
         ) {
             Image(
-                painter = painterResource(R.drawable.fcfc8ae10263bb1dd2a6ab51fd1fe08b5d07a7a6_full),
+                user.avatarUri?.let { rememberAsyncImagePainter(user.avatarUri) } ?: painterResource(user.avatar),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -75,6 +88,10 @@ fun EditButtons(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+
+        Text(
+            text = user.name
+        )
         Button(onClick = {}) {
             Text(
                 text = stringResource(R.string.changeName)
@@ -90,6 +107,10 @@ fun EditButtons(
     }
 }
 
+@Composable
+fun ChangeNameButton() {
+
+}
 
 @Composable
 @Preview
