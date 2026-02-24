@@ -1,5 +1,9 @@
 package com.example.donortrack.ui.screen
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -76,6 +80,13 @@ fun EditButtons(
 ) {
     var showBloodDropDown by remember { mutableStateOf(false) }
     var nameNow by remember { mutableStateOf(uiState.user.name) }
+    val pickMedia = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let {
+            onAvatarChange(it.toString())
+        }
+    }
 
     Column(modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,7 +96,9 @@ fun EditButtons(
             modifier = Modifier
                 .size(250.dp)
                 .clip(CircleShape)
-                .clickable {  }
+                .clickable { pickMedia.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                ) }
         ) {
             Image(
                 uiState.user.avatarUri?.let { rememberAsyncImagePainter(uiState.user.avatarUri) } ?: painterResource(uiState.user.avatar),
@@ -118,6 +131,18 @@ fun EditButtons(
             onDismissRequest = { showBloodDropDown = false }
         )
 
+    }
+}
+
+@Composable
+fun PickUrlImage() {
+    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+            uri ->
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: $uri")
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
     }
 }
 

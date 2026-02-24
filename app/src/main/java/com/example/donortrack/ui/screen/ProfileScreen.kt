@@ -1,5 +1,9 @@
 package com.example.donortrack.ui.screen
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -42,8 +46,6 @@ import com.example.donortrack.data.model.Bage
 import com.example.donortrack.data.model.Donation
 import com.example.donortrack.data.model.User
 import com.example.donortrack.data.model.bages
-import com.example.donortrack.data.model.donations
-import com.example.donortrack.data.model.testUser
 import com.example.donortrack.ui.theme.BlackHanSans
 import com.example.donortrack.ui.theme.DonorTrackTheme
 import com.example.donortrack.util.navigation.Routes
@@ -230,6 +232,7 @@ fun BageInfo(
         )
     }
 }
+
 
 @Composable
 fun TypeOfDonation(
