@@ -23,12 +23,14 @@ sealed class Routes(val route: String) {
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     val viewModel: ProfileViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = Routes.Main.route) {
+    NavHost(
+        navController = navController, startDestination = Routes.Main.route
+    ) {
         composable(Routes.Profile.route) {
-            ProfileApp(navController = navController, viewModel = viewModel)
+            ProfileApp(navController = navController, viewModel = viewModel, modifier = modifier)
         }
         composable(Routes.Main.route) {
-            MainApp()
+            MainApp(modifier = modifier)
         }
 
         composable(Routes.EditProfile.route) {

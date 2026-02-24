@@ -98,7 +98,8 @@ fun EditButtons(
                 .clip(CircleShape)
                 .clickable { pickMedia.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                ) }
+                )
+                }
         ) {
             Image(
                 uiState.user.avatarUri?.let { rememberAsyncImagePainter(uiState.user.avatarUri) } ?: painterResource(uiState.user.avatar),
@@ -131,18 +132,6 @@ fun EditButtons(
             onDismissRequest = { showBloodDropDown = false }
         )
 
-    }
-}
-
-@Composable
-fun PickUrlImage() {
-    val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-            uri ->
-        if (uri != null) {
-            Log.d("PhotoPicker", "Selected URI: $uri")
-        } else {
-            Log.d("PhotoPicker", "No media selected")
-        }
     }
 }
 

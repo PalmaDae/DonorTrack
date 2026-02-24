@@ -9,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -55,16 +56,18 @@ import com.example.donortrack.viewmodel.ProfileViewModel
 @Composable
 fun ProfileApp(
     navController: NavController = rememberNavController(),
-    viewModel: ProfileViewModel = viewModel()
+    viewModel: ProfileViewModel = viewModel(),
+    modifier: Modifier = Modifier
 ) {
     val viewModel by viewModel.profileUiState.collectAsState()
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = modifier
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+//        item { Spacer(modifier = Modifier.height(24.dp)) }
+
         item { UserInfo(navController = navController, user = viewModel.user) }
         item { UserBages(bages as MutableList<Bage>) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
