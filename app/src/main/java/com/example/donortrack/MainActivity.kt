@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
         GlobalScope.launch {
             val result = donorAPI.getCitiesInfo()
             if (result != null)
-                Log.d("donorAPI", result.toString())
+                Log.d("donorAPI", result.results.toString())
         }
     }
 }
