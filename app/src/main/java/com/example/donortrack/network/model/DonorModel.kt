@@ -1,4 +1,4 @@
-package com.example.donortrack.network
+package com.example.donortrack.network.model
 
 import com.google.gson.annotations.SerializedName
 

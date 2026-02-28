@@ -1,6 +1,6 @@
-package com.example.donortrack.network
+package com.example.donortrack.network.api
 
-import okhttp3.Response
+import com.example.donortrack.network.model.CityList
 import retrofit2.http.GET
 import retrofit2.http.Query
 

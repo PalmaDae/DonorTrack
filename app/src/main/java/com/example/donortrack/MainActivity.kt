@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.donortrack.network.DonorAPI
+import com.example.donortrack.network.api.DonorAPI
 import com.example.donortrack.network.RetrofitHelper
 import com.example.donortrack.util.navigation.AppNavigation
 import com.example.donortrack.util.navigation.bottomItems
