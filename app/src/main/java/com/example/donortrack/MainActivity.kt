@@ -1,6 +1,7 @@
 package com.example.donortrack
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,13 +23,21 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.donortrack.network.DonorAPI
+import com.example.donortrack.network.RetrofitHelper
 import com.example.donortrack.util.navigation.AppNavigation
 import com.example.donortrack.util.navigation.bottomItems
 import com.example.donortrack.ui.theme.DonorTrackTheme
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val donorAPI = RetrofitHelper.getInstance().create(DonorAPI::class.java)
+
+
         enableEdgeToEdge()
         setContent {
             DonorTrackTheme {
@@ -40,6 +49,11 @@ class MainActivity : ComponentActivity() {
                     AppNavigation(navController = navController, modifier =  Modifier.padding(paddingValues))
                 }
             }
+        }
+        GlobalScope.launch {
+            val result = donorAPI.getCitiesInfo()
+            if (result != null)
+                Log.d("donorAPI", result.toString())
         }
     }
 }
