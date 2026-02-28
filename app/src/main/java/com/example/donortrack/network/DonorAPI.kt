@@ -9,5 +9,5 @@ interface DonorAPI {
     suspend fun getCitiesInfo(
         @Query("all_bs") allBs: Boolean = true,
         @Query("country") country: Int = 1
-    ) : CitiesResponse
+    ) : CityList
 }
