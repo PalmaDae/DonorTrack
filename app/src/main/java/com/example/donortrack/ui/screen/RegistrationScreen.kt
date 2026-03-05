@@ -1,7 +1,13 @@
 package com.example.donortrack.ui.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,10 +20,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.donortrack.R
 import com.example.donortrack.ui.theme.DonorTrackTheme
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun RegisterApp() {
-    InputFields()
+fun RegisterApp(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        InputFields()
+
+        Spacer(
+            modifier = Modifier.height(64.dp)
+        )
+
+        Button(
+            onClick = {}
+        ) {
+            Text(text = "Create Profile")
+        }
+    }
 }
 
 

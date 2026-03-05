@@ -10,12 +10,14 @@ import com.example.donortrack.ui.screen.EditProfileApp
 
 import com.example.donortrack.ui.screen.MainApp
 import com.example.donortrack.ui.screen.ProfileApp
+import com.example.donortrack.ui.screen.RegisterApp
 import com.example.donortrack.viewmodel.ProfileViewModel
 
 sealed class Routes(val route: String) {
     object Profile: Routes("profile")
     object Main: Routes("main")
     object EditProfile: Routes("editprofile")
+    object Registration: Routes("registration")
 }
 
 
@@ -35,6 +37,10 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
 
         composable(Routes.EditProfile.route) {
             EditProfileApp(modifier = modifier, viewModel = viewModel)
+        }
+
+        composable(Routes.Registration.route) {
+            RegisterApp(modifier = modifier)
         }
     }
 }
