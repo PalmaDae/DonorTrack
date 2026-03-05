@@ -14,14 +14,14 @@
     <string name="redular">5 донаций</string>
     <string name="experience">3 года</string>
 
+    <string name="blood_group_o_positive">O+</string>
+    <string name="blood_group_o_negative">O-</string>
     <string name="blood_group_a_positive">A+</string>
     <string name="blood_group_a_negative">A-</string>
     <string name="blood_group_b_positive">B+</string>
     <string name="blood_group_b_negative">B-</string>
     <string name="blood_group_ab_positive">AB+</string>
     <string name="blood_group_ab_negative">AB-</string>
-    <string name="blood_group_o_positive">O+</string>
-    <string name="blood_group_o_negative">O-</string>
 
     <string name="user_name">PalmaDae</string>
     

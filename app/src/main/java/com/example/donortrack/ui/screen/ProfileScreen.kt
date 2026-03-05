@@ -1,10 +1,15 @@
 package com.example.donortrack.ui.screen
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +26,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,33 +38,41 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.donortrack.R
 import com.example.donortrack.data.model.Bage
 import com.example.donortrack.data.model.Donation
 import com.example.donortrack.data.model.User
 import com.example.donortrack.data.model.bages
-import com.example.donortrack.data.model.donations
-import com.example.donortrack.data.model.testUser
 import com.example.donortrack.ui.theme.BlackHanSans
 import com.example.donortrack.ui.theme.DonorTrackTheme
 import com.example.donortrack.util.navigation.Routes
+import com.example.donortrack.viewmodel.ProfileViewModel
 
 
 @Composable
-fun ProfileApp(navController: NavController = rememberNavController()) {
+fun ProfileApp(
+    navController: NavController = rememberNavController(),
+    viewModel: ProfileViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
+    val viewModel by viewModel.profileUiState.collectAsState()
+
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = modifier
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item { UserInfo(navController = navController) }
+//        item { Spacer(modifier = Modifier.height(24.dp)) }
+
+        item { UserInfo(navController = navController, user = viewModel.user) }
         item { UserBages(bages as MutableList<Bage>) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
-        items(donations) {
+        items(viewModel.donations) {
             DonationInfoCard(
                 donation = it,
                 modifier = Modifier.padding(8.dp)
@@ -144,7 +159,7 @@ fun UserData(
             .padding(10.dp)
     ) {
         Image(
-            painter = painterResource(user.avatar),
+            painter = user.avatarUri?.let { rememberAsyncImagePainter(user.avatarUri) } ?: painterResource(user.avatar),
             contentDescription = null,
             modifier = modifier
                 .padding(10.dp)
@@ -152,12 +167,12 @@ fun UserData(
                 .size(190.dp)
         )
         Text(
-            text = stringResource(user.name),
+            text = user.name,
             fontSize = 25.sp,
             fontFamily = BlackHanSans
         )
         Text(
-            text = stringResource(user.bloodType),
+            text = stringResource(user.bloodType.titleRes),
             fontSize = 25.sp,
             fontFamily = BlackHanSans
         )
@@ -195,8 +210,8 @@ fun ProfileButtons(navController: NavController) {
 }
 
 @Composable
-fun UserInfo(navController: NavController) {
-    UserData(testUser)
+fun UserInfo(navController: NavController, user: User) {
+    UserData(user)
     ProfileButtons(navController)
     CountOfDonation()
 }
@@ -220,6 +235,7 @@ fun BageInfo(
         )
     }
 }
+
 
 @Composable
 fun TypeOfDonation(

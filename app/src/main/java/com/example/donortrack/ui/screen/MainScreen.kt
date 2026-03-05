@@ -21,15 +21,16 @@ import com.example.donortrack.R
 import com.example.donortrack.ui.theme.DonorTrackTheme
 
 @Composable
-fun MainApp() {
+fun MainApp(
+    modifier: Modifier = Modifier
+) {
     val items = stringArrayResource(id = R.array.facts_quotes)
 
     val randomItem = items.random()
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = modifier
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item { FactCard(fact = randomItem) }
