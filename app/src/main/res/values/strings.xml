@@ -22,8 +22,6 @@
     <string name="blood_group_b_negative">B-</string>
     <string name="blood_group_ab_positive">AB+</string>
     <string name="blood_group_ab_negative">AB-</string>
-
-    <string name="user_name">PalmaDae</string>
     
     <string name="redactProfile">Редактировать Профиль</string>
     <string name="addDonation">Добавить Донацию</string>
@@ -64,4 +62,13 @@
         <item>Быть донором — значит выбирать заботу о других.</item>
         <item>В каждой капле донорской крови живёт надежда.</item>
     </string-array>
+
+
+    <string name="username">Логин</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+
+    <string name="exampleUsername">PalmaDae</string>
+    <string name="exampleEmail">example@mail.com</string>
+    <string name="examplePassword">5tCuTMB4k22</string>
 </resources>
