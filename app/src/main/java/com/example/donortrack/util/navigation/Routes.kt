@@ -6,11 +6,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.donortrack.ui.screen.EditProfileApp
+import com.example.donortrack.ui.screen.auth.EditProfileApp
 
 import com.example.donortrack.ui.screen.MainApp
-import com.example.donortrack.ui.screen.ProfileApp
-import com.example.donortrack.ui.screen.RegisterApp
+import com.example.donortrack.ui.screen.auth.ProfileApp
+import com.example.donortrack.ui.screen.auth.RegisterApp
 import com.example.donortrack.viewmodel.ProfileViewModel
 
 sealed class Routes(val route: String) {

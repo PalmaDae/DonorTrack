@@ -1,4 +1,4 @@
-package com.example.donortrack.ui.screen
+package com.example.donortrack.ui.screen.auth
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

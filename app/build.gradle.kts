@@ -62,4 +62,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.7")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
+    implementation("androidx.room:room-runtime:2.8.4")
+    implementation("org.mindrot:jbcrypt:0.4")
 }
