@@ -72,7 +72,7 @@ fun EditButtons(
     onBloodChange: (BloodType) -> Unit
 ) {
     var showBloodDropDown by remember { mutableStateOf(false) }
-    var nameNow by remember { mutableStateOf(uiState.user.name) }
+    var nameNow by remember { mutableStateOf(uiState.userModel.name) }
     val pickMedia = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -95,7 +95,7 @@ fun EditButtons(
                 }
         ) {
             Image(
-                uiState.user.avatarUri?.let { rememberAsyncImagePainter(uiState.user.avatarUri) } ?: painterResource(uiState.user.avatar),
+                uiState.userModel.avatarUri?.let { rememberAsyncImagePainter(uiState.userModel.avatarUri) } ?: painterResource(uiState.userModel.avatar),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -106,7 +106,7 @@ fun EditButtons(
 
 
         Text(
-            text = uiState.user.name
+            text = uiState.userModel.name
         )
         ChangeNameButton(nameNow = nameNow, onNameChange = { newName ->
             nameNow = newName
@@ -116,7 +116,7 @@ fun EditButtons(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = { showBloodDropDown = true }) {
-            Text(text = stringResource(uiState.user.bloodType.titleRes))
+            Text(text = stringResource(uiState.userModel.bloodType.titleRes))
         }
 
         DropDownBlood(

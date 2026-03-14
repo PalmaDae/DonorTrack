@@ -40,7 +40,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.donortrack.R
 import com.example.donortrack.data.model.Bage
 import com.example.donortrack.data.model.Donation
-import com.example.donortrack.data.model.User
+import com.example.donortrack.data.model.UserModel
 import com.example.donortrack.data.model.bages
 import com.example.donortrack.ui.theme.BlackHanSans
 import com.example.donortrack.ui.theme.DonorTrackTheme
@@ -63,7 +63,7 @@ fun ProfileApp(
     ) {
 //        item { Spacer(modifier = Modifier.height(24.dp)) }
 
-        item { UserInfo(navController = navController, user = viewModel.user) }
+        item { UserInfo(navController = navController, userModel = viewModel.userModel) }
         item { UserBages(bages as MutableList<Bage>) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
@@ -144,7 +144,7 @@ fun UserBages(
 
 @Composable
 fun UserData(
-    user: User,
+    userModel: UserModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -154,7 +154,7 @@ fun UserData(
             .padding(10.dp)
     ) {
         Image(
-            painter = user.avatarUri?.let { rememberAsyncImagePainter(user.avatarUri) } ?: painterResource(user.avatar),
+            painter = userModel.avatarUri?.let { rememberAsyncImagePainter(userModel.avatarUri) } ?: painterResource(userModel.avatar),
             contentDescription = null,
             modifier = modifier
                 .padding(10.dp)
@@ -162,12 +162,12 @@ fun UserData(
                 .size(190.dp)
         )
         Text(
-            text = user.name,
+            text = userModel.name,
             fontSize = 25.sp,
             fontFamily = BlackHanSans
         )
         Text(
-            text = stringResource(user.bloodType.titleRes),
+            text = stringResource(userModel.bloodType.titleRes),
             fontSize = 25.sp,
             fontFamily = BlackHanSans
         )
@@ -205,8 +205,8 @@ fun ProfileButtons(navController: NavController) {
 }
 
 @Composable
-fun UserInfo(navController: NavController, user: User) {
-    UserData(user)
+fun UserInfo(navController: NavController, userModel: UserModel) {
+    UserData(userModel)
     ProfileButtons(navController)
     CountOfDonation()
 }

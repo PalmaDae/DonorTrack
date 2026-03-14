@@ -14,13 +14,13 @@ class ProfileViewModel : ViewModel() {
 
     fun nameUpdate(newName: String) {
         _profileUiState.update {
-            it.copy(user = it.user.copy(name = newName))
+            it.copy(userModel = it.userModel.copy(name = newName))
         }
     }
 
     fun bloodTypeUpdate(newBloodType: BloodType) {
         _profileUiState.update {
-            it.copy(user = it.user.copy(bloodType = newBloodType))
+            it.copy(userModel = it.userModel.copy(bloodType = newBloodType))
         }
     }
 
@@ -32,7 +32,7 @@ class ProfileViewModel : ViewModel() {
 
     fun avatarUpdate(uri: String) {
         _profileUiState.update {
-            it.copy(user = it.user.copy(avatarUri = uri))
+            it.copy(userModel = it.userModel.copy(avatarUri = uri))
         }
     }
 }
