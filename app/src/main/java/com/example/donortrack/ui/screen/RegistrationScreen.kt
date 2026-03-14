@@ -43,7 +43,7 @@ fun RegisterApp(
         Button(
             onClick = {}
         ) {
-            Text(text = "Create Profile")
+            Text(text = stringResource(R.string.createProfile))
         }
     }
 }
@@ -60,6 +60,7 @@ fun InputFields(
     var email by remember { mutableStateOf("") }
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordCorrect by remember { mutableStateOf("") }
 
     Column(modifier = modifier) {
         OutlinedTextField(
@@ -80,6 +81,13 @@ fun InputFields(
             value = password,
             onValueChange = { password = it },
             label = { Text(stringResource(R.string.password)) },
+            placeholder = { Text(stringResource(R.string.examplePassword)) }
+        )
+
+        OutlinedTextField(
+            value = passwordCorrect,
+            onValueChange = { passwordCorrect = it },
+            label = { Text(stringResource(R.string.passwordCorrect)) },
             placeholder = { Text(stringResource(R.string.examplePassword)) }
         )
     }

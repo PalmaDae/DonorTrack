@@ -67,6 +67,9 @@
     <string name="username">Логин</string>
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
+    <string name="passwordCorrect">Подтвердите пароль</string>
+    <string name="createProfile">Создать аккаунт</string>
+    <string name="login">Войти</string>
 
     <string name="exampleUsername">PalmaDae</string>
     <string name="exampleEmail">example@mail.com</string>
