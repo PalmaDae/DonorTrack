@@ -17,5 +17,7 @@ data class UserEntity(
     @ColumnInfo(name = "email")
     val email: String,
     @ColumnInfo(name = "hash_pass")
-    val hashPass: String
+    val hashPass: String,
+    @ColumnInfo(name = "avatar_uri")
+    val avatarUri: String?
 )
