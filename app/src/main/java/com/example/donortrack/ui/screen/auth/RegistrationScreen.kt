@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,6 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.donortrack.R
 import com.example.donortrack.ui.theme.DonorTrackTheme
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.donortrack.data.model.UserModel
 import com.example.donortrack.util.ServiceLocator
@@ -54,34 +62,71 @@ fun InputFields(
     var password by remember { mutableStateOf("") }
     var passwordCorrect by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     Column(modifier = modifier) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text(stringResource(R.string.email)) },
-            placeholder = { Text(stringResource(R.string.exampleEmail)) }
+            placeholder = { Text(stringResource(R.string.exampleEmail)) },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Next)
+                }
+            ),
+            singleLine = true
         )
 
         OutlinedTextField(
             value = login,
             onValueChange = { login = it },
             label = { Text(stringResource(R.string.username)) },
-            placeholder = { Text(stringResource(R.string.exampleUsername)) }
+            placeholder = { Text(stringResource(R.string.exampleUsername)) },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Next)
+                }
+            ),
+            singleLine = true
         )
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text(stringResource(R.string.password)) },
-            placeholder = { Text(stringResource(R.string.examplePassword)) }
+            placeholder = { Text(stringResource(R.string.examplePassword)) },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Next)
+                }
+            ),
+            singleLine = true
         )
 
         OutlinedTextField(
             value = passwordCorrect,
             onValueChange = { passwordCorrect = it },
             label = { Text(stringResource(R.string.passwordCorrect)) },
-            placeholder = { Text(stringResource(R.string.examplePassword)) }
+            placeholder = { Text(stringResource(R.string.examplePassword)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Next)
+                }
+            ),
         )
         Spacer(
             modifier = Modifier.height(64.dp)
