@@ -8,7 +8,7 @@ data class UserModel(
     val avatarUri: String? = null,
     val name: String = "Your Name",
     val bloodType: BloodType = BloodType.APlus,
-    val hashPass: String,
-    val login: String,
-    val email: String
+    val hashPass: String = "",
+    val login: String = "",
+    val email: String = ""
 )

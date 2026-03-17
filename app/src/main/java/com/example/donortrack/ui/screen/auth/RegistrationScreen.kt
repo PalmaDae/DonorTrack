@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,6 +21,10 @@ import com.example.donortrack.R
 import com.example.donortrack.ui.theme.DonorTrackTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import com.example.donortrack.data.model.UserModel
+import com.example.donortrack.util.ServiceLocator
+import com.example.donortrack.util.hashpass
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterApp(
@@ -31,18 +36,7 @@ fun RegisterApp(
             .padding(top = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         InputFields()
-
-        Spacer(
-            modifier = Modifier.height(64.dp)
-        )
-
-        Button(
-            onClick = {}
-        ) {
-            Text(text = stringResource(R.string.createProfile))
-        }
     }
 }
 
@@ -59,6 +53,7 @@ fun InputFields(
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordCorrect by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
     Column(modifier = modifier) {
         OutlinedTextField(
@@ -88,6 +83,21 @@ fun InputFields(
             label = { Text(stringResource(R.string.passwordCorrect)) },
             placeholder = { Text(stringResource(R.string.examplePassword)) }
         )
+        Spacer(
+            modifier = Modifier.height(64.dp)
+        )
+
+        Button(
+            onClick = {
+                scope.launch {
+                    var userModel = UserModel(login = login, hashPass = hashpass(password), email = email)
+
+                    ServiceLocator.getUserRepository().createNewUser(userModel = userModel)
+                }
+            }
+        ) {
+            Text(text = stringResource(R.string.createProfile))
+        }
     }
 }
 

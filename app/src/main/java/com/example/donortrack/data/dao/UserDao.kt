@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.donortrack.data.entity.UserDonations
 import com.example.donortrack.data.entity.UserEntity
 
 
@@ -21,7 +20,7 @@ interface UserDao {
     @Query("select * from users where login = :login limit 1")
     suspend fun getUserByLogin(login: String?): UserEntity?
 
-    @Transaction
-    @Query("select * from users")
-    fun getUserDonations(): List<UserDonations>
+//    @Transaction
+//    @Query("select * from users")
+//    fun getUserDonations(): List<UserDonations>
 }

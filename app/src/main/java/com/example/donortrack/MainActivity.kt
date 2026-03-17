@@ -28,12 +28,15 @@ import com.example.donortrack.network.RetrofitHelper
 import com.example.donortrack.util.navigation.AppNavigation
 import com.example.donortrack.util.navigation.bottomItems
 import com.example.donortrack.ui.theme.DonorTrackTheme
+import com.example.donortrack.util.ServiceLocator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ServiceLocator.initDatabase(this)
 
         val donorAPI = RetrofitHelper.getInstance().create(DonorAPI::class.java)
 
