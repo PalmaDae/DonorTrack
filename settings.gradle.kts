@@ -21,4 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "DonorTrack"
 include(":app")
- 
+include(":domain")
+include(":data")
+include(":feature-auth")
+include(":feature-main")

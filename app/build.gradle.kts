@@ -58,7 +58,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.androidx.compose.navigation)
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.coil-kt:coil-compose:2.6.0") 
 
     implementation("com.google.code.gson:gson:2.8.7")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
