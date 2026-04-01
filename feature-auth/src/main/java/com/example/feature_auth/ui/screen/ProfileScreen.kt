@@ -37,15 +37,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.donortrack.R
-import com.example.donortrack.data.model.Bage
-import com.example.donortrack.data.model.Donation
-import com.example.donortrack.data.model.UserModel
-import com.example.donortrack.data.model.bages
-import com.example.donortrack.ui.theme.BlackHanSans
-import com.example.donortrack.ui.theme.DonorTrackTheme
-import com.example.donortrack.util.navigation.Routes
-import com.example.donortrack.viewmodel.ProfileViewModel
+import com.example.feature_auth.R
+import com.example.domain.model.Bage
+import com.example.domain.model.Donation
+import com.example.domain.model.UserModel
+import com.example.feature_common.ui.theme.BlackHanSans
+import com.example.feature_common.ui.theme.DonorTrackTheme
+import com.example.feature_auth.viewmodel.ProfileViewModel
+import com.example.feature_auth.utils.toTitleRes
+import com.example.feature_common.util.navigation.Routes
 
 
 @Composable
@@ -54,7 +54,7 @@ fun ProfileApp(
     viewModel: ProfileViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val viewModel by viewModel.profileUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.profileUiState.collectAsStateWithLifecycle()
 
     LazyColumn(
         modifier = modifier
@@ -63,11 +63,11 @@ fun ProfileApp(
     ) {
 //        item { Spacer(modifier = Modifier.height(24.dp)) }
 
-        item { UserInfo(navController = navController, userModel = viewModel.userModel) }
-        item { UserBages(bages as MutableList<Bage>) }
+        item { UserInfo(navController = navController, userModel = uiState.userModel) }
+        item { UserBages(uiState.userModel.bages ?: emptyList()) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
-        items(viewModel.donations) {
+        items(uiState.donations) {
             DonationInfoCard(
                 donation = it,
                 modifier = Modifier.padding(8.dp)
@@ -131,7 +131,7 @@ fun DonationIcon(
 //Передавать данные для бейджа, а так картинки статичные, или сделать выбор значков в профиле
 @Composable
 fun UserBages(
-    list: MutableList<Bage>
+    list: List<Bage>
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -154,7 +154,11 @@ fun UserData(
             .padding(10.dp)
     ) {
         Image(
-            painter = userModel.avatarUri?.let { rememberAsyncImagePainter(userModel.avatarUri) } ?: painterResource(userModel.avatar),
+            painter = if (!userModel.avatarUri.isNullOrEmpty()) {
+                rememberAsyncImagePainter(userModel.avatarUri)
+            } else {
+                painterResource(R.drawable.ic_default_avatar)
+            },
             contentDescription = null,
             modifier = modifier
                 .padding(10.dp)
@@ -167,7 +171,7 @@ fun UserData(
             fontFamily = BlackHanSans
         )
         Text(
-            text = stringResource(userModel.bloodType.titleRes),
+            text = stringResource(userModel.bloodType.toTitleRes()),
             fontSize = 25.sp,
             fontFamily = BlackHanSans
         )

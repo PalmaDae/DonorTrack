@@ -1,4 +1,4 @@
-package com.example.donortrack.ui.theme
+package com.example.feature_common.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

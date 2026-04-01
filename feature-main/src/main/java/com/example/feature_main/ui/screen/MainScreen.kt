@@ -14,8 +14,8 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.donortrack.R
-import com.example.donortrack.ui.theme.DonorTrackTheme
+import com.example.feature_common.R
+import com.example.feature_common.ui.theme.DonorTrackTheme
 
 @Composable
 fun MainApp(

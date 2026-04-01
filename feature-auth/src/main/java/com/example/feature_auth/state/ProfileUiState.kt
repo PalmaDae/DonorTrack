@@ -1,9 +1,9 @@
 package com.example.feature_auth.state
 
 import androidx.compose.runtime.Immutable
-import com.example.donortrack.data.model.Bage
-import com.example.donortrack.data.model.Donation
-import com.example.donortrack.data.model.UserModel
+import com.example.domain.model.Bage
+import com.example.domain.model.Donation
+import com.example.domain.model.UserModel
 
 @Immutable
 data class ProfileUiState(

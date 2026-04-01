@@ -1,17 +1,41 @@
 package com.example.domain.model
 
-import androidx.annotation.StringRes
-import com.example.donortrack.R
+enum class BloodType {
+    O_PLUS,
+    O_MINUS,
+    A_PLUS,
+    A_MINUS,
+    B_PLUS,
+    B_MINUS,
+    AB_PLUS,
+    AB_MINUS;
 
-enum class BloodType(
-    @StringRes val titleRes: Int
-) {
-        OPlus(R.string.blood_group_o_positive),
-        OMinus(R.string.blood_group_o_negative),
-        APlus(R.string.blood_group_a_positive),
-        AMinus(R.string.blood_group_a_negative),
-        BPlus(R.string.blood_group_b_positive),
-        BMinus(R.string.blood_group_b_negative),
-        ABPlus(R.string.blood_group_ab_positive),
-        ABMinus(R.string.blood_group_ab_negative)
+    companion object {
+        fun fromString(value: String): BloodType {
+            return when (value) {
+                "O+" -> O_PLUS
+                "O-" -> O_MINUS
+                "A+" -> A_PLUS
+                "A-" -> A_MINUS
+                "B+" -> B_PLUS
+                "B-" -> B_MINUS
+                "AB+" -> AB_PLUS
+                "AB-" -> AB_MINUS
+                else -> A_PLUS
+            }
+        }
+
+        fun toString(bloodType: BloodType): String {
+            return when (bloodType) {
+                O_PLUS -> "O+"
+                O_MINUS -> "O-"
+                A_PLUS -> "A+"
+                A_MINUS -> "A-"
+                B_PLUS -> "B+"
+                B_MINUS -> "B-"
+                AB_PLUS -> "AB+"
+                AB_MINUS -> "AB-"
+            }
+        }
     }
+}

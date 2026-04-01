@@ -1,8 +1,8 @@
 package com.example.feature_auth.viewmodel
 
-import com.example.donortrack.data.model.UserModel
-import com.example.donortrack.state.RegistrationUiState
-import com.example.donortrack.util.ServiceLocator
+import com.example.domain.model.UserModel
+import com.example.feature_auth.state.RegistrationUiState
+import com.example.data.ServiceLocator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

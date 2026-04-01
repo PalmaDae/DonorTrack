@@ -1,6 +1,7 @@
 package com.example.data.local.database
 
-@Database(entities = [UserEntity::class], version = 1)
-abstract class InceptionDatabase : RoomDatabase(){
+import com.example.data.local.dao.UserDao
+
+abstract class InceptionDatabase{
     abstract fun userDao(): UserDao
 }

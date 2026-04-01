@@ -1,9 +1,9 @@
 package com.example.feature_auth.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.donortrack.data.model.BloodType
-import com.example.donortrack.data.model.Donation
-import com.example.donortrack.state.ProfileUiState
+import com.example.domain.model.BloodType
+import com.example.domain.model.Donation
+import com.example.feature_auth.state.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

@@ -1,14 +1,12 @@
 package com.example.data.local.dao
 
-@Dao
+import com.example.data.local.entity.UserEntity
+
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun putUserData(user: UserEntity)
 
-    @Update
     fun updateUserData(user: UserEntity)
 
-    @Query("select * from users where login = :login limit 1")
     suspend fun getUserByLogin(login: String?): UserEntity?
 
 //    @Transaction

@@ -1,4 +1,4 @@
-package com.example.donortrack.util
+package com.example.feature_auth.utils
 
 import org.mindrot.jbcrypt.BCrypt
 

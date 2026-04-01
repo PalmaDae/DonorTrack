@@ -1,5 +1,8 @@
 package com.example.data.remote
 
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 object RetrofitHelper {
     val baseUrl = "https://api2.donorsearch.org/api/"
 

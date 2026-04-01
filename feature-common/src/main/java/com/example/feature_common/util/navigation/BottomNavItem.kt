@@ -1,4 +1,4 @@
-package com.example.donortrack.util.navigation
+package com.example.feature_common.util.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create

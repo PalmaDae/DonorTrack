@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="avatar_description">Profile avatar</string>
+
+    <string name="username">Логин</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="passwordCorrect">Подтвердите пароль</string>
+    <string name="createProfile">Создать аккаунт</string>
+    <string name="login">Войти</string>
+
+    <string name="exampleUsername">PalmaDae</string>
+    <string name="exampleEmail">example@mail.com</string>
+    <string name="examplePassword">5tCuTMB4k22</string>
+
+    <string name="redactProfile">Редактировать профиль</string>
+    <string name="addDonation">Добавить донацию</string>
+
+    <string name="blood_group_o_positive">O+</string>
+    <string name="blood_group_o_negative">O-</string>
+    <string name="blood_group_a_positive">A+</string>
+    <string name="blood_group_a_negative">A-</string>
+    <string name="blood_group_b_positive">B+</string>
+    <string name="blood_group_b_negative">B-</string>
+    <string name="blood_group_ab_positive">AB+</string>
+    <string name="blood_group_ab_negative">AB-</string>
+</resources>

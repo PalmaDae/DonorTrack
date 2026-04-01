@@ -19,17 +19,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.donortrack.R
-import com.example.donortrack.ui.theme.DonorTrackTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.donortrack.data.model.UserModel
-import com.example.donortrack.util.ServiceLocator
-import com.example.donortrack.util.hashpass
 import kotlinx.coroutines.launch
+import com.example.feature_auth.R
+import com.example.feature_common.ui.theme.DonorTrackTheme
+import com.example.domain.model.UserModel
+import com.example.data.ServiceLocator
+import com.example.feature_auth.utils.hashpass
 
 @Composable
 fun RegisterApp(

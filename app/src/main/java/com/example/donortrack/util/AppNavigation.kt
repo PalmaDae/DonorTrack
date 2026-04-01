@@ -1,4 +1,4 @@
-package com.example.donortrack.util.navigation
+package com.example.donortrack.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -6,20 +6,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.donortrack.ui.screen.auth.EditProfileApp
-
-import com.example.donortrack.ui.screen.MainApp
-import com.example.donortrack.ui.screen.auth.ProfileApp
-import com.example.donortrack.ui.screen.auth.RegisterApp
-import com.example.donortrack.viewmodel.ProfileViewModel
-
-sealed class Routes(val route: String) {
-    object Profile: Routes("profile")
-    object Main: Routes("main")
-    object EditProfile: Routes("editprofile")
-    object Registration: Routes("registration")
-}
-
+import com.example.feature_auth.ui.screen.EditProfileApp
+import com.example.feature_auth.ui.screen.ProfileApp
+import com.example.feature_auth.ui.screen.RegisterApp
+import com.example.feature_auth.viewmodel.ProfileViewModel
+import com.example.feature_common.util.navigation.Routes
+import com.example.feature_main.ui.screen.MainApp
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -44,4 +36,3 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         }
     }
 }
-

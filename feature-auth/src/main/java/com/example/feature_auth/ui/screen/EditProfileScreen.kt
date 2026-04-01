@@ -36,17 +36,19 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.donortrack.data.model.BloodType
-import com.example.donortrack.state.ProfileUiState
-import com.example.donortrack.ui.theme.DonorTrackTheme
-import com.example.donortrack.viewmodel.ProfileViewModel
+import com.example.domain.model.BloodType
+import com.example.feature_auth.state.ProfileUiState
+import com.example.feature_common.ui.theme.DonorTrackTheme
+import com.example.feature_auth.viewmodel.ProfileViewModel
+import com.example.feature_auth.R
+import com.example.feature_auth.utils.toTitleRes
 
 @Composable
 fun EditProfileApp(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = viewModel()
 ) {
-    val uiState by viewModel.profileUiState.collectAsState()
+    val uiState by viewModel.profileUiState.collectAsState(initial = ProfileUiState())
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -89,14 +91,21 @@ fun EditButtons(
             modifier = Modifier
                 .size(250.dp)
                 .clip(CircleShape)
-                .clickable { pickMedia.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                )
+                .clickable {
+                    pickMedia.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
                 }
         ) {
+            val painter = if (!uiState.userModel.avatarUri.isNullOrEmpty()) {
+                rememberAsyncImagePainter(uiState.userModel.avatarUri)
+            } else {
+                painterResource(id = R.drawable.ic_default_avatar)
+            }
+
             Image(
-                uiState.userModel.avatarUri?.let { rememberAsyncImagePainter(uiState.userModel.avatarUri) } ?: painterResource(uiState.userModel.avatar),
-                contentDescription = null,
+                painter = painter,
+                contentDescription = stringResource(R.string.avatar_description),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
@@ -116,7 +125,7 @@ fun EditButtons(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = { showBloodDropDown = true }) {
-            Text(text = stringResource(uiState.userModel.bloodType.titleRes))
+            Text(text = stringResource(uiState.userModel.bloodType.toTitleRes()))
         }
 
         DropDownBlood(
@@ -141,7 +150,7 @@ fun DropDownBlood(
     ) {
         BloodType.values().forEach { type ->
             DropdownMenuItem(
-                text = { Text ( stringResource(type.titleRes)) },
+                text = { Text(stringResource(type.toTitleRes())) },
                 onClick = {
                     onBloodChange(type)
                     onDismissRequest()

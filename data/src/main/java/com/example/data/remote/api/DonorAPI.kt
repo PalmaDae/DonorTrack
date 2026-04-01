@@ -1,6 +1,6 @@
 package com.example.data.remote.api
 
-import com.example.donortrack.network.model.CityList
+import com.example.data.remote.model.CityList
 import retrofit2.http.GET
 import retrofit2.http.Query
 

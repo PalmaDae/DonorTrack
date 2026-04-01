@@ -22,12 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.donortrack.network.api.DonorAPI
-import com.example.donortrack.network.RetrofitHelper
-import com.example.donortrack.util.navigation.AppNavigation
-import com.example.donortrack.util.navigation.bottomItems
-import com.example.donortrack.ui.theme.DonorTrackTheme
-import com.example.donortrack.util.ServiceLocator
+import com.example.data.ServiceLocator
+import com.example.donortrack.util.AppNavigation
+import com.example.feature_common.ui.theme.DonorTrackTheme
+import com.example.feature_common.util.navigation.bottomItems
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -36,9 +34,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         ServiceLocator.initDatabase(this)
-
-        val donorAPI = RetrofitHelper.getInstance().create(DonorAPI::class.java)
-
 
         enableEdgeToEdge()
         setContent {
@@ -51,11 +46,6 @@ class MainActivity : ComponentActivity() {
                     AppNavigation(navController = navController, modifier =  Modifier.padding(paddingValues))
                 }
             }
-        }
-        GlobalScope.launch {
-            val result = donorAPI.getCitiesInfo()
-            if (result != null)
-                Log.d("donorAPI", result.results.toString())
         }
     }
 }
