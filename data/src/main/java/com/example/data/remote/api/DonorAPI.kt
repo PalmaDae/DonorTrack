@@ -1,5 +1,7 @@
 package com.example.data.remote.api
 
+import com.example.data.remote.model.DonorPointDetailDto
+import com.example.data.remote.model.DonorResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
