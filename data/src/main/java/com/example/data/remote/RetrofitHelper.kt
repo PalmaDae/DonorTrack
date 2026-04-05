@@ -1,14 +1,18 @@
 package com.example.data.remote
 
+import com.example.data.remote.api.DonorAPI
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.getValue
 
 object RetrofitHelper {
-    val baseUrl = "https://api2.donorsearch.org/api/"
+    private const val BASE_URL = "https://api2.donorsearch.org/api/"
 
-    fun getInstance(): Retrofit {
-        return Retrofit.Builder().baseUrl(baseUrl)
+    val api: DonorAPI by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(DonorAPI::class.java)
     }
 }

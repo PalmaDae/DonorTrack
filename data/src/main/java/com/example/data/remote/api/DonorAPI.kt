@@ -1,18 +1,15 @@
 package com.example.data.remote.api
 
-import com.example.data.remote.model.CityList
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DonorAPI {
-    @GET("cities/")
-    suspend fun getCitiesInfo(
-        @Query("all_bs") allBs: Boolean = true,
-        @Query("country") country: Int = 1
-    ) : CityList
+    @GET("blood_stations")
+    suspend fun getAllPoints(
+        @Query("city_slug") citySlug: String? = null
+    ): DonorResponse
 
-    @GET("blood_stations/")
-    suspend fun getStations(
-        @Query("city_id") cityId: Int
-    )
+    @GET("blood_stations/{id}")
+    suspend fun getDetail(@Path("id") pointId: Int): DonorPointDetailDto
 }
