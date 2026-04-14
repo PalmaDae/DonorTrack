@@ -1,27 +1,35 @@
 package com.example.data.repository
 
+import android.util.Log
 import com.example.data.ServiceLocator
 import com.example.data.mapper.UserModelMapper
+import com.example.data.remote.RetrofitHelper
+import com.example.data.remote.api.AuthAPI
+import com.example.data.remote.model.UserRegistrationRequest
 import com.example.domain.model.UserModel
 
 class UserRepository(
-    private val mapper: UserModelMapper
+    private val api: AuthAPI = RetrofitHelper.authAPI
 ) {
-    private fun getUserDao() = ServiceLocator.getDatabase().userDao()
-
-    suspend fun createNewUser(userModel: UserModel) {
-        val isExistUser = getUserDao().getUserByLogin(userModel.login)
-
-        if (isExistUser == null) {
-            getUserDao().putUserData(mapper.map(userModel))
-        } else {
-            throw Exception("User is already exist")
+    suspend fun registerUser(request: UserRegistrationRequest): Result<String> {
+        return try {
+            Log.d("REG", "Calling api.registerUser with $request")
+            val response = api.registerUser(request)
+            Log.d("REG", "Response code: ${response.code()}")
+            if (response.isSuccessful) {
+                Result.success(response.body()?.message ?: "Успешно")
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorMessage = parseError(errorBody, response.code())
+                Result.failure(Exception(errorMessage))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
-    suspend fun getUserByLogin(login: String): UserModel? {
-        val entity = getUserDao().getUserByLogin(login)
 
-        return entity?.let { mapper.map(it) }
+    private fun parseError(json: String?, code: Int): String {
+        return "some error"
     }
 }

@@ -1,5 +1,6 @@
 package com.example.feature_auth.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,9 +28,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import com.example.feature_auth.R
 import com.example.feature_common.ui.theme.DonorTrackTheme
-import com.example.domain.model.UserModel
 import com.example.data.ServiceLocator
-import com.example.feature_auth.utils.hashpass
+import com.example.data.remote.model.UserRegistrationRequest
 
 @Composable
 fun RegisterApp(
@@ -45,14 +45,11 @@ fun RegisterApp(
     }
 }
 
-
-
-
-
-
 @Composable
 fun InputFields(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSuccess: () -> Unit = {},
+    onError: (String) -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
     var login by remember { mutableStateOf("") }
@@ -60,6 +57,7 @@ fun InputFields(
     var passwordCorrect by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+    var isLoading by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         OutlinedTextField(
@@ -67,14 +65,8 @@ fun InputFields(
             onValueChange = { email = it },
             label = { Text(stringResource(R.string.email)) },
             placeholder = { Text(stringResource(R.string.exampleEmail)) },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }
-            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
             singleLine = true
         )
 
@@ -83,14 +75,8 @@ fun InputFields(
             onValueChange = { login = it },
             label = { Text(stringResource(R.string.username)) },
             placeholder = { Text(stringResource(R.string.exampleUsername)) },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }
-            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
             singleLine = true
         )
 
@@ -99,14 +85,8 @@ fun InputFields(
             onValueChange = { password = it },
             label = { Text(stringResource(R.string.password)) },
             placeholder = { Text(stringResource(R.string.examplePassword)) },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }
-            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
             singleLine = true
         )
 
@@ -115,37 +95,45 @@ fun InputFields(
             onValueChange = { passwordCorrect = it },
             label = { Text(stringResource(R.string.passwordCorrect)) },
             placeholder = { Text(stringResource(R.string.examplePassword)) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }
-            ),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
+            singleLine = true
         )
-        Spacer(
-            modifier = Modifier.height(64.dp)
-        )
+
+        Spacer(modifier = Modifier.height(64.dp))
 
         Button(
             onClick = {
-                scope.launch {
-                    var userModel = UserModel(login = login, hashPass = hashpass(password), email = email)
-
-                    ServiceLocator.getUserRepository().createNewUser(userModel = userModel)
+                if (password != passwordCorrect) {
+                    onError("Passwords do not match")
+                    return@Button
                 }
-            }
+                scope.launch {
+                    isLoading = true
+                    val request = UserRegistrationRequest(
+                        username = login,
+                        password = password,
+                        passCorrect = passwordCorrect,
+                        email = email
+                    )
+                    Log.d("REG", "Sending POST request to /api/auth/registration with $request")
+                    val result = ServiceLocator.getUserRepository().registerUser(request)
+                    isLoading = false
+                    result.onSuccess { message ->
+                        Log.d("REG", "Success: $message")
+                        onSuccess()
+                    }.onFailure { error ->
+                        Log.e("REG", "Error: ${error.message}", error)
+                        onError(error.message ?: "Registration failed")
+                    }
+                }
+            },
+            enabled = !isLoading
         ) {
-            Text(text = stringResource(R.string.createProfile))
+            Text(if (isLoading) "Registering..." else stringResource(R.string.createProfile))
         }
     }
 }
-
-
-
-
 
 @Composable
 @Preview
@@ -154,7 +142,6 @@ fun RegisterPreview() {
         RegisterApp()
     }
 }
-
 
 @Composable
 @Preview

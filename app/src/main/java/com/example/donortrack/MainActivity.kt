@@ -33,8 +33,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ServiceLocator.initDatabase(this)
-
         enableEdgeToEdge()
         setContent {
             DonorTrackTheme {
