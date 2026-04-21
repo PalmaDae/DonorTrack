@@ -1,22 +1,18 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
 }
 
 android {
-    namespace = "com.example.donortrack"
+    namespace = "com.example.feature_add_donation"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.donortrack"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -41,22 +37,19 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature-auth"))
-    implementation(project(":feature-main"))
-    implementation(project(":domain"))
-    implementation(project(":data"))
-    implementation(project(":feature-common"))
-    implementation(project(":feature-add-donation"))
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.navigation)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation(project(":feature-common"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.runtime)
-    implementation(libs.androidx.activity.compose)
-
-    implementation(libs.androidx.compose.navigation)
-
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

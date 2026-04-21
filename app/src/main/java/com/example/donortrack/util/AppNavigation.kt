@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.feature_add_donation.screen.AddDonationScreen
 import com.example.feature_auth.ui.screen.EditProfileApp
 import com.example.feature_auth.ui.screen.ProfileApp
 import com.example.feature_auth.ui.screen.RegisterApp
@@ -33,6 +34,10 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
 
         composable(Routes.Registration.route) {
             RegisterApp(modifier = modifier)
+        }
+
+        composable(Routes.AddDonation.route) {
+            AddDonationScreen(modifier = modifier)
         }
     }
 }

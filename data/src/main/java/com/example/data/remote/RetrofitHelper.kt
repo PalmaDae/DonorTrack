@@ -1,6 +1,7 @@
 package com.example.data.remote
 
 import com.example.data.remote.api.AuthAPI
+import com.example.data.remote.api.DonationAPI
 import com.example.data.remote.api.DonorAPI
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,5 +25,13 @@ object RetrofitHelper {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AuthAPI::class.java)
+    }
+
+    val donationAPI: DonationAPI by lazy {
+        Retrofit.Builder()
+            .baseUrl(AUTH_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(DonationAPI::class.java)
     }
 }

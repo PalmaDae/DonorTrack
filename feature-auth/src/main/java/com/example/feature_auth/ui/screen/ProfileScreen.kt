@@ -197,7 +197,9 @@ fun ProfileButtons(navController: NavController) {
             )
         }
         Button(
-            onClick = {},
+            onClick = {
+                navController.navigate(Routes.AddDonation.route)
+            },
             modifier = Modifier.weight(1f)
         ) {
             Text(
