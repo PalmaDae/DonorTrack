@@ -14,12 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.domain.model.DonationType
 import com.example.feature_add_donation.viewmodel.AddDonationViewModel
 import com.example.feature_add_donation.R
+import com.example.feature_common.ui.theme.DonorTrackTheme
 
 @Composable
 fun AddDonationScreen(
@@ -121,5 +123,23 @@ fun AddDonationScreen(
         ) {
             Text("Add Donation")
         }
+    }
+}
+
+@Preview
+@Composable
+fun AddDonationPreview() {
+    DonorTrackTheme() {
+        AddDonationScreen()
+    }
+}
+
+@Preview
+@Composable
+fun AddDonationPreviewDark() {
+    DonorTrackTheme(
+        darkTheme = true
+    ) {
+        AddDonationScreen()
     }
 }
