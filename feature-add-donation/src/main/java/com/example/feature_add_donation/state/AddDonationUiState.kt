@@ -1,6 +1,6 @@
 package com.example.feature_add_donation.state
 
-import com.example.domain.model.DonationType
+import com.example.domain.model.donation.DonationType
 
 data class AddDonationUiState(
     val date: String = "",

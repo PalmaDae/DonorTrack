@@ -41,6 +41,7 @@ import com.example.feature_auth.R
 import com.example.domain.model.Bage
 import com.example.domain.model.Donation
 import com.example.domain.model.UserModel
+import com.example.domain.model.donation.DonationModel
 import com.example.feature_common.ui.theme.BlackHanSans
 import com.example.feature_common.ui.theme.DonorTrackTheme
 import com.example.feature_auth.viewmodel.ProfileViewModel
@@ -81,7 +82,7 @@ fun ProfileApp(
 @Composable
 fun DonationInfoCard(
     modifier: Modifier = Modifier,
-    donation: Donation
+    donation: DonationModel
 ) {
     Box(
         modifier = Modifier
@@ -100,14 +101,14 @@ fun DonationInfoCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(donation.dateOfDonation),
+                        text = stringResource(donation.date),
                         style = MaterialTheme.typography.displayMedium
                     )
                     DonationIcon(
-                        donIcon = donation.typeOfDonation
+                        donIcon = donation.donationType
                     )
                     DonationIcon(
-                        donIcon = donation.stageOfDonation
+                        donIcon = donation.donationStatus
                     )
                 }
             }

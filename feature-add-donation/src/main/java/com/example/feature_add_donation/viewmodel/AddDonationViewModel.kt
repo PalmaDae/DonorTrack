@@ -2,7 +2,6 @@ package com.example.feature_add_donation.viewmodel
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.DonationRepository
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import com.example.feature_add_donation.state.AddDonationUiState
-import com.example.domain.model.DonationType
+import com.example.domain.model.donation.DonationType
 import com.example.feature_add_donation.utils.toByteArray
 import kotlinx.coroutines.launch
 import java.time.LocalDate
