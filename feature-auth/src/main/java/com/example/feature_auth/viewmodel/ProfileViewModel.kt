@@ -2,7 +2,7 @@ package com.example.feature_auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.domain.model.BloodType
-import com.example.domain.model.Donation
+import com.example.domain.model.donation.DonationModel
 import com.example.feature_auth.state.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +24,7 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
-    fun addDonation(donation: Donation) {
+    fun addDonation(donation: DonationModel) {
         _profileUiState.update {
             it.copy(donations = it.donations + donation)
         }

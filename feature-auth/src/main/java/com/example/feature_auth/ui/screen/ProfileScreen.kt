@@ -1,6 +1,10 @@
 package com.example.feature_auth.ui.screen
 
+import android.os.Build
 import androidx.annotation.DrawableRes
+import com.example.domain.model.donation.DonationType
+import com.example.domain.model.donation.DonationStatus
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +43,6 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.feature_auth.R
 import com.example.domain.model.Bage
-import com.example.domain.model.Donation
 import com.example.domain.model.UserModel
 import com.example.domain.model.donation.DonationModel
 import com.example.feature_common.ui.theme.BlackHanSans
@@ -47,6 +50,7 @@ import com.example.feature_common.ui.theme.DonorTrackTheme
 import com.example.feature_auth.viewmodel.ProfileViewModel
 import com.example.feature_auth.utils.toTitleRes
 import com.example.feature_common.util.navigation.Routes
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -79,42 +83,43 @@ fun ProfileApp(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DonationInfoCard(
     modifier: Modifier = Modifier,
     donation: DonationModel
 ) {
+    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val formattedDate = donation.date.format(dateFormatter)
+
     Box(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Card(modifier = modifier
-            .size(width = (200.dp), height = 45.dp),
+        Card(
+            modifier = modifier.size(width = 200.dp, height = 45.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Box(
+            Row(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(donation.date),
-                        style = MaterialTheme.typography.displayMedium
-                    )
-                    DonationIcon(
-                        donIcon = donation.donationType
-                    )
-                    DonationIcon(
-                        donIcon = donation.donationStatus
-                    )
-                }
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.displayMedium
+                )
+                DonationIcon(
+                    donIcon = getDonationTypeIconRes(donation.donationType)
+                )
+                DonationIcon(
+                    donIcon = getDonationStatusIconRes(donation.donationStatus)
+                )
             }
         }
     }
 }
+
 
 @Composable
 fun DonationIcon(
@@ -286,4 +291,17 @@ fun ProfileScreenPreview() {
     DonorTrackTheme {
         ProfileApp()
     }
+}
+
+private fun getDonationTypeIconRes(type: DonationType): Int {
+    return when (type) {
+        DonationType.BLOOD -> R.drawable.blood
+        DonationType.PLASMA -> R.drawable.plasma
+        DonationType.ERYTHROCYTE -> R.drawable.erythrocyte
+        DonationType.THROMBOCYTE -> R.drawable.thrombocyte
+    }
+}
+
+private fun getDonationStatusIconRes(status: DonationStatus): Int {
+    return R.drawable.blood
 }

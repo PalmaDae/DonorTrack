@@ -2,10 +2,15 @@ package com.example.feature_add_donation.screen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -20,90 +25,96 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.example.domain.model.BloodType
 import com.example.domain.model.donation.DonationType
 import com.example.feature_common.ui.theme.DonorTrackTheme
 
+@Composable
+fun AddDonationApp(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        AddDonationContent(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 60.dp, start = 16.dp, end = 16.dp)
+        )
+    }
+}
 
 @Composable
-fun AddDonationApp() {
+fun AddDonationContent(
+    modifier: Modifier = Modifier
+) {
+    var selectedDate by remember { mutableStateOf<Long?>(null) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    var selectedDonationType by remember { mutableStateOf(DonationType.BLOOD) }
+    var showDonationMenu by remember { mutableStateOf(false) }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    var selectedDate by remember {
-        mutableStateOf<Long?>(null)
-    }
-
-    var showDatePicker by remember {
-        mutableStateOf(false)
-    }
-
-    var selectedDonationType by remember {
-        mutableStateOf(DonationType.BLOOD)
-    }
-
-    var showDonationMenu by remember {
-        mutableStateOf(false)
-    }
-
-    var selectedImageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        selectedImageUri = uri
+    val pickMedia = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let {
+            selectedImageUri = it
+        }
     }
 
     Column(
-        modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-
         Button(
-            onClick = {
-                showDatePicker = true
-            },
+            onClick = { showDatePicker = true },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Выбрать дату")
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = selectedDate?.toString() ?: "Дата не выбрана"
         )
 
-        Button(
-            onClick = {
-                showDonationMenu = true
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(selectedDonationType.name)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { showDonationMenu = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(selectedDonationType.name)
+            }
+
+            DonationTypePicker(
+                expanded = showDonationMenu,
+                onDonationChange = { type -> selectedDonationType = type },
+                onDismissRequest = { showDonationMenu = false }
+            )
         }
 
-        DonationTypePicker(
-            expanded = showDonationMenu,
-            onDonationChange = { type ->
-                selectedDonationType = type
-            },
-            onDismissRequest = {
-                showDonationMenu = false
-            }
-        )
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
-                launcher.launch("image/*")
+                pickMedia.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Загрузить справку")
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         selectedImageUri?.let {
             Text("Файл выбран")
@@ -112,16 +123,11 @@ fun AddDonationApp() {
 
     if (showDatePicker) {
         DatePickerModal(
-            onDateSelected = { date ->
-                selectedDate = date
-            },
-            onDismiss = {
-                showDatePicker = false
-            }
+            onDateSelected = { date -> selectedDate = date },
+            onDismiss = { showDatePicker = false }
         )
     }
 }
-
 
 @Composable
 fun DatePickerModal(
@@ -173,41 +179,10 @@ fun DonationTypePicker(
     }
 }
 
-@Composable
-fun LoadCertificate() {
-
-    var selectedImageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        selectedImageUri = uri
-    }
-
-    Column {
-        Button(
-            onClick = {
-                launcher.launch("image/*")
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Загрузить справку")
-        }
-
-        selectedImageUri?.let {
-            Text(text = "Файл выбран")
-        }
-    }
-}
-
 @Preview
 @Composable
 fun AddDonationPreview() {
-    DonorTrackTheme(
-
-    ) {
+    DonorTrackTheme {
         AddDonationApp()
     }
 }
@@ -215,9 +190,7 @@ fun AddDonationPreview() {
 @Preview
 @Composable
 fun AddDonationPreviewDark() {
-    DonorTrackTheme(
-        darkTheme = true
-    ) {
+    DonorTrackTheme(darkTheme = true) {
         AddDonationApp()
     }
 }

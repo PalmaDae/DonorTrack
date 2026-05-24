@@ -1,17 +1,21 @@
 package com.example.data.remote.api
 
+import com.example.data.remote.model.ConfirmRegistrationRequest
 import com.example.data.remote.model.UserRegistrationRequest
 import com.example.data.remote.model.UserRegistrationResponse
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface AuthAPI {
-    @POST("api/auth/registration")
-    @Headers("Content-Type: application/json")
+
+    @POST("api/v1/auth/registration")
     suspend fun registerUser(
         @Body request: UserRegistrationRequest
+    ): Response<UserRegistrationResponse>
+
+    @POST("api/v1/auth/registration/confirm")
+    suspend fun confirmRegistration(
+        @Body request: ConfirmRegistrationRequest
     ): Response<UserRegistrationResponse>
 }

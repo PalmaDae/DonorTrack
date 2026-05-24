@@ -3,6 +3,7 @@ package com.example.feature_auth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.ServiceLocator
+import com.example.data.remote.model.ConfirmRegistrationRequest
 import com.example.data.remote.model.UserRegistrationRequest
 import com.example.feature_auth.state.RegistrationUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,11 +16,32 @@ class RegistrationViewModel : ViewModel() {
 
     fun registerUser(username: String, password: String, passCorrect: String, email: String) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            _uiState.value = RegistrationUiState(isLoading = true)
             val request = UserRegistrationRequest(username, password, passCorrect, email)
             val result = ServiceLocator.getUserRepository().registerUser(request)
             result.onSuccess { message ->
-                _uiState.value = _uiState.value.copy(
+                _uiState.value = RegistrationUiState(
+                    isLoading = false,
+                    isCodeSent = true,
+                    successMessage = message
+                )
+            }.onFailure { error ->
+                _uiState.value = RegistrationUiState(
+                    isLoading = false,
+                    error = error.message
+                )
+            }
+        }
+    }
+
+    fun confirmRegistration(code: String, username: String, password: String, passCorrect: String, email: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            val userDto = UserRegistrationRequest(username, password, passCorrect, email)
+            val request = ConfirmRegistrationRequest(email, code, userDto)
+            val result = ServiceLocator.getUserRepository().confirmRegistration(request)
+            result.onSuccess { message ->
+                _uiState.value = RegistrationUiState(
                     isLoading = false,
                     isSuccess = true,
                     successMessage = message

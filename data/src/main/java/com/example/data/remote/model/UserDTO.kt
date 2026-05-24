@@ -18,3 +18,9 @@ data class ErrorResponse(
     val passCorrect: String?,
     val email: String?
 )
+
+data class ConfirmRegistrationRequest(
+    val email: String,
+    val code: String,
+    val userDto: UserRegistrationRequest
+)
