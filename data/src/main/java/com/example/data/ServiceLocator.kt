@@ -12,10 +12,10 @@ object ServiceLocator {
     private var userRepository: UserRepository? = null
 
     fun getUserRepository(): UserRepository {
-        if (userRepository == null) {
-            val authApi: AuthAPI = RetrofitHelper.authAPI
-            userRepository = UserRepository(authApi)
-        }
-        return userRepository ?: throw IllegalStateException("UserRepository is not initialized")
+        return userRepository ?: UserRepository(
+            authApi = RetrofitHelper.authAPI,
+            userApi = RetrofitHelper.userAPI,
+            mapper = UserModelMapper()
+        ).also { userRepository = it }
     }
 }

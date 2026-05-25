@@ -53,6 +53,7 @@ import com.example.feature_common.util.navigation.Routes
 import java.time.format.DateTimeFormatter
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileApp(
     navController: NavController = rememberNavController(),
@@ -66,17 +67,14 @@ fun ProfileApp(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        item { Spacer(modifier = Modifier.height(24.dp)) }
 
         item { UserInfo(navController = navController, userModel = uiState.userModel) }
+        item { CountOfDonation(uiState.donations) }
+
         item { UserBages(uiState.userModel.bages ?: emptyList()) }
-        item { Spacer(modifier = Modifier.height(16.dp)) }
 
         items(uiState.donations) {
-            DonationInfoCard(
-                donation = it,
-                modifier = Modifier.padding(8.dp)
-            )
+            DonationInfoCard(donation = it, modifier = Modifier.padding(8.dp))
         }
     }
 
@@ -159,18 +157,6 @@ fun UserData(
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-        Image(
-            painter = if (!userModel.avatarUri.isNullOrEmpty()) {
-                rememberAsyncImagePainter(userModel.avatarUri)
-            } else {
-                painterResource(R.drawable.ic_default_avatar)
-            },
-            contentDescription = null,
-            modifier = modifier
-                .padding(10.dp)
-                .clip(CircleShape)
-                .size(190.dp)
-        )
         Text(
             text = userModel.name,
             fontSize = 25.sp,
@@ -180,6 +166,11 @@ fun UserData(
             text = stringResource(userModel.bloodType.toTitleRes()),
             fontSize = 25.sp,
             fontFamily = BlackHanSans
+        )
+        Text(
+            text = userModel.city ?: "Город не указан",
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -220,7 +211,6 @@ fun ProfileButtons(navController: NavController) {
 fun UserInfo(navController: NavController, userModel: UserModel) {
     UserData(userModel)
     ProfileButtons(navController)
-    CountOfDonation()
 }
 
 @Composable
@@ -264,19 +254,25 @@ fun TypeOfDonation(
 //Оставить иконки у всех одинаковые, передавать чисто кол-во донаций для каждого типа
 
 @Composable
-fun CountOfDonation() {
+fun CountOfDonation(donations: List<DonationModel>) {
+    val bloodCount = donations.count { it.donationType == DonationType.BLOOD }
+    val plasmaCount = donations.count { it.donationType == DonationType.PLASMA }
+    val thromboCount = donations.count { it.donationType == DonationType.THROMBOCYTE }
+    val erythroCount = donations.count { it.donationType == DonationType.ERYTHROCYTE }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TypeOfDonation(R.drawable.blood, 3)
-        TypeOfDonation(R.drawable.plasma, 2)
-        TypeOfDonation(R.drawable.thrombocyte, 5)
-        TypeOfDonation(R.drawable.erythrocyte, 0)
+        TypeOfDonation(R.drawable.blood, bloodCount)
+        TypeOfDonation(R.drawable.plasma, plasmaCount)
+        TypeOfDonation(R.drawable.thrombocyte, thromboCount)
+        TypeOfDonation(R.drawable.erythrocyte, erythroCount)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview
 fun ProfileScreenPreviewDark() {
@@ -285,6 +281,7 @@ fun ProfileScreenPreviewDark() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview
 fun ProfileScreenPreview() {

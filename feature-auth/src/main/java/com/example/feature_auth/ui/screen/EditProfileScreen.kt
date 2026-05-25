@@ -48,19 +48,16 @@ fun EditProfileApp(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = viewModel()
 ) {
-    val uiState by viewModel.profileUiState.collectAsState(initial = ProfileUiState())
+    val uiState by viewModel.profileUiState.collectAsState()
 
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         EditButtons(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 60.dp),
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 60.dp),
             uiState = uiState,
-            onNameChange = viewModel::nameUpdate,
-            onAvatarChange = viewModel::avatarUpdate,
-            onBloodChange = viewModel::bloodTypeUpdate
+            onBloodChange = { newBlood -> viewModel.updateBloodType(newBlood.name) },
+            onEmailChange = { newEmail -> viewModel.updateEmail(newEmail) },
+            onCityChange = { newCity -> viewModel.updateCity(newCity) },
+            onPasswordChange = { old, new, confirm -> viewModel.updatePassword(old, new, confirm) }
         )
     }
 }
@@ -69,71 +66,35 @@ fun EditProfileApp(
 fun EditButtons(
     modifier: Modifier = Modifier,
     uiState: ProfileUiState,
-    onNameChange: (String) -> Unit,
-    onAvatarChange: (String) -> Unit,
-    onBloodChange: (BloodType) -> Unit
+    onBloodChange: (BloodType) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onCityChange: (String) -> Unit,
+    onPasswordChange: (String, String, String) -> Unit // (old, new, confirm)
 ) {
+    var emailInput by remember { mutableStateOf(uiState.userModel.email) }
+    var cityInput by remember { mutableStateOf(uiState.userModel.city ?: "") }
+    var oldPass by remember { mutableStateOf("") }
+    var newPass by remember { mutableStateOf("") }
+    var confirmPass by remember { mutableStateOf("") }
     var showBloodDropDown by remember { mutableStateOf(false) }
-    var nameNow by remember { mutableStateOf(uiState.userModel.name) }
-    val pickMedia = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        uri?.let {
-            onAvatarChange(it.toString())
-        }
-    }
 
-    Column(modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .size(250.dp)
-                .clip(CircleShape)
-                .clickable {
-                    pickMedia.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }
-        ) {
-            val painter = if (!uiState.userModel.avatarUri.isNullOrEmpty()) {
-                rememberAsyncImagePainter(uiState.userModel.avatarUri)
-            } else {
-                painterResource(id = R.drawable.ic_default_avatar)
-            }
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Image(
-                painter = painter,
-                contentDescription = stringResource(R.string.avatar_description),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        OutlinedTextField(value = emailInput, onValueChange = { emailInput = it }, label = { Text("Email") })
+        Button(onClick = { onEmailChange(emailInput) }) { Text("Сохранить Email") }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        OutlinedTextField(value = cityInput, onValueChange = { cityInput = it }, label = { Text("Город") })
+        Button(onClick = { onCityChange(cityInput) }) { Text("Сохранить город") }
 
-
-        Text(
-            text = uiState.userModel.name
-        )
-        ChangeNameButton(nameNow = nameNow, onNameChange = { newName ->
-            nameNow = newName
-            onNameChange(newName)
-        })
-
-        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(value = oldPass, onValueChange = { oldPass = it }, label = { Text("Старый пароль") })
+        OutlinedTextField(value = newPass, onValueChange = { newPass = it }, label = { Text("Новый пароль") })
+        OutlinedTextField(value = confirmPass, onValueChange = { confirmPass = it }, label = { Text("Подтверждение") })
+        Button(onClick = { onPasswordChange(oldPass, newPass, confirmPass) }) { Text("Сменить пароль") }
 
         Button(onClick = { showBloodDropDown = true }) {
-            Text(text = stringResource(uiState.userModel.bloodType.toTitleRes()))
+            Text(text = "Группа: ${uiState.userModel.bloodType}")
         }
-
-        DropDownBlood(
-            expanded = showBloodDropDown,
-            onBloodChange = onBloodChange,
-            onDismissRequest = { showBloodDropDown = false }
-        )
-
+        DropDownBlood(expanded = showBloodDropDown, onBloodChange = onBloodChange, onDismissRequest = { showBloodDropDown = false })
     }
 }
 

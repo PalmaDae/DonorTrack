@@ -43,4 +43,6 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
 
     implementation(project(":domain"))
+
+    implementation("com.github.franmontiel:PersistentCookieJar:v1.0.1")
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,17 +26,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.feature_auth.R
+import com.example.feature_auth.viewmodel.LoginViewModel
 import com.example.feature_common.ui.theme.DonorTrackTheme
 
 @Composable
 fun LoginApp(
     modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = viewModel(),
     onNavigateToRegister: () -> Unit = {},
     onLoginSuccess: () -> Unit = {}
 ) {
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
+
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -44,15 +53,14 @@ fun LoginApp(
             .padding(top = 60.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Column(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
                 value = login,
-                onValueChange = { login = it },
+                onValueChange = {
+                    login = it
+                    viewModel.clearError()
+                },
                 label = { Text(stringResource(R.string.username)) },
-                placeholder = { Text(stringResource(R.string.exampleUsername)) },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -61,25 +69,31 @@ fun LoginApp(
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    viewModel.clearError()
+                },
                 label = { Text(stringResource(R.string.password)) },
-                placeholder = { Text(stringResource(R.string.examplePassword)) },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+        }
+
+        if (errorMessage != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error)
         }
 
         Spacer(modifier = Modifier.height(64.dp))
 
         Button(
             onClick = {
-                onLoginSuccess()
+                viewModel.login(login, password, onLoginSuccess)
             },
+            enabled = !isLoading,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(R.string.login))
+            Text(text = if (isLoading) "Вход..." else stringResource(R.string.login))
         }
 
         Spacer(modifier = Modifier.height(16.dp))

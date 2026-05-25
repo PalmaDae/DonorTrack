@@ -1,12 +1,14 @@
 package com.example.domain.model
 
+import com.example.domain.model.donation.DonationModel
+
 data class UserModel(
-    val avatarResId: Int? = null,
-    val avatarUri: String? = null,
     val name: String = "Your Name",
-    val bloodType: BloodType = BloodType.A_PLUS,
-    val hashPass: String = "",
     val login: String = "",
     val email: String = "",
-    val bages: List<Bage> = emptyList()
+    val bloodType: BloodType = BloodType.A_PLUS,
+    val city: String? = null,
+    val hashPass: String = "",
+    val bages: List<Bage> = emptyList(),
+    val donations: List<DonationModel> = emptyList()
 )
