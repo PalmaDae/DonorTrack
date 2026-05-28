@@ -2,47 +2,38 @@ package com.example.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 
+
 data class DonorResponse(
     @SerializedName("count") val count: Int,
-    @SerializedName("results") val results: List<DonorPointDto>
+    @SerializedName("results") val results: List<DonorPointModel>
 )
 
-data class DonorPointDto(
-    val id: Int,
-    val title: String,
-    val address: String,
-    val city: City?
-) {
-    fun toModel() = DonorPointModel(
-        id = id,
-        titleOfPoint = title,
-        addressOfPoint = address,
-        city = city
-    )
-}
 
-data class DonorPointDetailDto(
+data class DonorPointModel(
     val id: Int,
     val title: String,
     val address: String,
+    val lat: Double?,
+    val lng: Double?,
     val city: City?,
+    val closed: Boolean?,
+
+    @SerializedName("o_plus") val oPlus: String?,
+    @SerializedName("o_minus") val oMinus: String?,
+    @SerializedName("a_plus") val aPlus: String?,
+    @SerializedName("a_minus") val aMinus: String?,
+    @SerializedName("b_plus") val bPlus: String?,
+    @SerializedName("b_minus") val bMinus: String?,
+    @SerializedName("ab_plus") val abPlus: String?,
+    @SerializedName("ab_minus") val abMinus: String?,
+
     val schedule: List<ScheduleItem>? = emptyList(),
-    val phoneNumbers: List<PhoneNumber>? = emptyList(),
-    val acceptedComponents: AcceptedComponents? = null,
-    val site: String? = null,
-    val email: String? = null,
-    val parserUrl: String? = null,
-    @SerializedName("o_plus") val oPlus: String? = null,
-    @SerializedName("o_minus") val oMinus: String? = null,
-    @SerializedName("a_plus") val aPlus: String? = null,
-    @SerializedName("a_minus") val aMinus: String? = null,
-    @SerializedName("b_plus") val bPlus: String? = null,
-    @SerializedName("b_minus") val bMinus: String? = null,
-    @SerializedName("ab_plus") val abPlus: String? = null,
-    @SerializedName("ab_minus") val abMinus: String? = null,
+    @SerializedName("phone_numbers") val phoneNumbers: List<PhoneNumber>? = emptyList(),
+    val site: String?,
+    val email: String?
 ) {
-    fun toDetailModel(): DonorPointDetailModel {
-        val bloodStatusMap = mapOf(
+    val bloodStatusMap: Map<String, String>
+        get() = mapOf(
             "O+" to (oPlus ?: "no_need"),
             "O-" to (oMinus ?: "no_need"),
             "A+" to (aPlus ?: "no_need"),
@@ -52,58 +43,23 @@ data class DonorPointDetailDto(
             "AB+" to (abPlus ?: "no_need"),
             "AB-" to (abMinus ?: "no_need")
         )
-        return DonorPointDetailModel(
-            title = title,
-            address = address,
-            schedule = schedule ?: emptyList(),
-            phoneNumbers = phoneNumbers ?: emptyList(),
-            acceptedComponents = acceptedComponents ?: AcceptedComponents(false, false, false, false, false),
-            bloodStatus = bloodStatusMap,
-            site = site,
-            email = email,
-            parserUrl = parserUrl
-        )
-    }
 }
 
-data class DonorPointModel(
-    val id: Int,
-    val titleOfPoint: String,
-    val addressOfPoint: String,
-    val city: City? = null
-)
-
 data class City(
-    val title: String
-)
-
-data class DonorPointDetailModel(
+    val id: Int,
     val title: String,
-    val address: String,
-    val schedule: List<ScheduleItem> = emptyList(),
-    val phoneNumbers: List<PhoneNumber> = emptyList(),
-    val acceptedComponents: AcceptedComponents = AcceptedComponents(false,false,false,false,false),
-    val bloodStatus: Map<String, String> = emptyMap(),
-    val site: String? = null,
-    val email: String? = null,
-    val parserUrl: String? = null
+    val slug: String
 )
 
 data class ScheduleItem(
+    val id: Int?,
     val dow: String,
     val start: String,
     val end: String
 )
 
 data class PhoneNumber(
+    val id: Int?,
     val phone: String,
-    val comment: String
-)
-
-data class AcceptedComponents(
-    val blood: Boolean,
-    val plasma: Boolean,
-    val platelets: Boolean,
-    val erythrocytes: Boolean,
-    val leukocytes: Boolean
+    val comment: String?
 )

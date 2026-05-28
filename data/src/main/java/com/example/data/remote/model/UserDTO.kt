@@ -24,3 +24,5 @@ data class ConfirmRegistrationRequest(
     val code: String,
     val userDto: UserRegistrationRequest
 )
+
+

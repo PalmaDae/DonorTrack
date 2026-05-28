@@ -11,7 +11,7 @@ enum class BloodType {
     AB_MINUS;
 
     companion object {
-        fun fromString(value: String): BloodType {
+        fun fromString(value: String?): BloodType {
             return when (value) {
                 "O+" -> O_PLUS
                 "O-" -> O_MINUS
@@ -21,7 +21,7 @@ enum class BloodType {
                 "B-" -> B_MINUS
                 "AB+" -> AB_PLUS
                 "AB-" -> AB_MINUS
-                else -> A_PLUS
+                else -> O_MINUS
             }
         }
 

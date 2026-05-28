@@ -11,18 +11,24 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface UserAPI {
-    @GET("api/v1/profile")
-    suspend fun getUserProfile(): ProfileDTO
 
-    @POST("api/v1/profile/edit/email")
+
+    @GET("profile")
+    suspend fun getUserProfile(): Response<ProfileDTO>
+
+
+    @POST("profile/edit/email")
     suspend fun changeEmail(@Body dto: EmailChangeDto): Response<Unit>
 
-    @POST("api/v1/user/password/change")
+
+    @POST("profile/edit/password")
     suspend fun changePassword(@Body dto: PasswordChangeDto): Response<Unit>
 
-    @POST("api/v1/profile/edit/bloodtype")
+
+    @POST("profile/edit/bloodtype")
     suspend fun changeBloodType(@Body dto: BloodTypeChangeDto): Response<Unit>
 
-    @POST("api/v1/profile/edit/city")
+
+    @POST("profile/edit/city")
     suspend fun changeCity(@Body dto: CityChangeDto): Response<Unit>
 }

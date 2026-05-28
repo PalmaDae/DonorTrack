@@ -13,3 +13,12 @@ fun BloodType.toTitleRes(): Int = when (this) {
     BloodType.AB_PLUS -> R.string.blood_group_ab_positive
     BloodType.AB_MINUS -> R.string.blood_group_ab_negative
 }
+
+fun String?.toBloodType(): BloodType {
+    return try {
+        if (this == null) BloodType.O_MINUS
+        else BloodType.valueOf(this)
+    } catch (e: IllegalArgumentException) {
+        BloodType.O_MINUS
+    }
+}

@@ -7,6 +7,10 @@ sealed class Routes(val route: String) {
     object Registration : Routes("registration")
     object Login : Routes("login")
     object AddDonation : Routes("add_donation")
+    object Map : Routes("map")
+    object Calendar : Routes("calendar")
+    object Scanner : Routes("scanner")
+
     object Confirm : Routes("confirm/{email}/{login}") {
         fun createRoute(email: String, login: String) = "confirm/$email/$login"
     }

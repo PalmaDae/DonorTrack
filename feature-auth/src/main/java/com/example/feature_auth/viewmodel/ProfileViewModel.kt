@@ -3,7 +3,6 @@ package com.example.feature_auth.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.ServiceLocator
-import com.example.data.remote.model.PasswordChangeDto
 import com.example.data.repository.UserRepository
 import com.example.feature_auth.state.ProfileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,10 +24,48 @@ class ProfileViewModel(
 
     fun loadProfile() {
         viewModelScope.launch {
-            _profileUiState.update { it.copy(isLoading = true, error = null) }
+            android.util.Log.d("ProfileVM", "-> loadProfile() запущен")
+
+
+
+            if (!_profileUiState.value.isInitialized) {
+                _profileUiState.update { it.copy(isLoading = true, error = null) }
+            }
+
             userRepository.getProfile()
                 .onSuccess { user ->
-                    _profileUiState.update { it.copy(isLoading = false, userModel = user, donations = user.donations) }
+                    android.util.Log.d("ProfileVM", "-> Успех! Данные получены с бэка: City=${user.city}, Blood=${user.bloodType}")
+
+                    _profileUiState.update {
+                        it.copy(
+                            isLoading = false,
+                            isInitialized = true,
+                            userModel = user,
+                            donations = user.donations,
+                            error = null
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    android.util.Log.e("ProfileVM", "-> Ошибка загрузки профиля!", error)
+                    _profileUiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = error.localizedMessage ?: "Неизвестная ошибка"
+                        )
+                    }
+                }
+        }
+    }
+
+
+    private fun performUpdate(action: suspend () -> Result<*>) {
+        viewModelScope.launch {
+            _profileUiState.update { it.copy(isLoading = true, error = null) }
+            action()
+                .onSuccess {
+
+                    loadProfile()
                 }
                 .onFailure { error ->
                     _profileUiState.update { it.copy(isLoading = false, error = error.message) }
@@ -36,22 +73,8 @@ class ProfileViewModel(
         }
     }
 
-    private fun performUpdate(action: suspend () -> Result<*>) {
-        viewModelScope.launch {
-            _profileUiState.update { it.copy(isLoading = true) }
-            action()
-                .onSuccess { loadProfile() }
-                .onFailure { error -> _profileUiState.update { it.copy(isLoading = false, error = error.message) } }
-        }
-    }
 
     fun updateCity(newCity: String) = performUpdate { userRepository.changeCity(newCity) }
 
     fun updateBloodType(newBlood: String) = performUpdate { userRepository.changeBloodType(newBlood) }
-
-    fun updateEmail(newEmail: String) = performUpdate { userRepository.changeEmail(newEmail) }
-
-    fun updatePassword(old: String, new: String, confirm: String) = performUpdate {
-        userRepository.changePassword(PasswordChangeDto(old, new, confirm))
-    }
 }

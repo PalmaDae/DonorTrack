@@ -10,6 +10,7 @@ import com.example.data.remote.model.BloodTypeChangeDto
 import com.example.data.remote.model.CityChangeDto
 import com.example.data.remote.model.ConfirmRegistrationRequest
 import com.example.data.remote.model.EmailChangeDto
+import com.example.data.remote.model.LoginRequest
 import com.example.data.remote.model.PasswordChangeDto
 import com.example.data.remote.model.UserRegistrationRequest
 import com.example.domain.model.UserModel
@@ -42,8 +43,18 @@ class UserRepository(
 
     suspend fun getProfile(): Result<UserModel> {
         return try {
-            val dto = userApi.getUserProfile()
-            Result.success(mapper.map(dto))
+            val response = userApi.getUserProfile()
+
+            if (response.isSuccessful) {
+                val dto = response.body()
+                if (dto != null) {
+                    Result.success(mapper.map(dto))
+                } else {
+                    Result.failure(Exception("Сервер вернул пустой профиль"))
+                }
+            } else {
+                Result.failure(Exception("Ошибка загрузки профиля: ${response.code()}"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -75,7 +86,8 @@ class UserRepository(
 
     suspend fun loginUser(login: String, password: String): Result<Unit> {
         return try {
-            val response = authApi.login(username = login, password = password)
+
+            val response = authApi.login(LoginRequest(username = login, password = password))
 
             if (response.isSuccessful) {
                 Result.success(Unit)

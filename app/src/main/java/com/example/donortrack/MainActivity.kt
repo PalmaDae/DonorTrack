@@ -1,7 +1,6 @@
 package com.example.donortrack
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,12 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.data.ServiceLocator
 import com.example.donortrack.util.AppNavigation
 import com.example.feature_common.ui.theme.DonorTrackTheme
+import com.example.feature_common.util.navigation.Routes
 import com.example.feature_common.util.navigation.bottomItems
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +34,30 @@ class MainActivity : ComponentActivity() {
         setContent {
             DonorTrackTheme {
                 val navController = rememberNavController()
+
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                val isAuthScreen = currentRoute == Routes.Registration.route ||
+                        currentRoute == Routes.Login.route ||
+                        currentRoute == Routes.Confirm.route
+
                 Scaffold(
-                    bottomBar = { BottomBarNavigate(navController = navController) },
-                    topBar = { TopBarBack(navController = navController) }
+                    topBar = {
+                        if (!isAuthScreen) {
+                            TopBarBack(navController = navController, currentRoute = currentRoute)
+                        }
+                    },
+                    bottomBar = {
+                        if (!isAuthScreen) {
+                            BottomBarNavigate(navController = navController, currentRoute = currentRoute)
+                        }
+                    }
                 ) { paddingValues ->
-                    AppNavigation(navController = navController, modifier =  Modifier.padding(paddingValues))
+                    AppNavigation(
+                        navController = navController,
+                        modifier = Modifier.padding(paddingValues)
+                    )
                 }
             }
         }
@@ -50,10 +66,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarBack(navController: NavController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
+fun TopBarBack(navController: NavController, currentRoute: String?) {
     val isRootScreen = bottomItems.any { it.route == currentRoute }
 
     if (!isRootScreen) {
@@ -67,16 +80,13 @@ fun TopBarBack(navController: NavController) {
         )
     } else {
         TopAppBar(
-            title = {  }
+            title = { }
         )
     }
 }
 
 @Composable
-fun BottomBarNavigate(navController: NavController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
+fun BottomBarNavigate(navController: NavController, currentRoute: String?) {
     NavigationBar {
         bottomItems.forEach { item ->
             NavigationBarItem(
@@ -86,7 +96,11 @@ fun BottomBarNavigate(navController: NavController) {
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
                             launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 }

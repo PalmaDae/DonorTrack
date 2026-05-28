@@ -13,18 +13,29 @@ class DonationRepository {
         date: String,
         type: String,
         certificateBytes: ByteArray?
-    ) {
-        val dateBody = date.toRequestBody("text/plain".toMediaTypeOrNull())
-        val typeBody = type.toRequestBody("text/plain".toMediaTypeOrNull())
+    ): Result<Unit> {
+        return try {
+            val dateBody = date.toRequestBody("text/plain".toMediaTypeOrNull())
+            val typeBody = type.toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val filePart = certificateBytes?.let {
-            MultipartBody.Part.createFormData(
-                "certificate",
-                "certificate.jpg",
-                it.toRequestBody("image/*".toMediaTypeOrNull())
-            )
+            val filePart = certificateBytes?.let {
+                MultipartBody.Part.createFormData(
+                    "certificateFile",
+                    "certificate.jpg",
+                    it.toRequestBody("image/jpeg".toMediaTypeOrNull())
+                )
+            }
+
+
+            val response = api.addDonation(dateBody, typeBody, filePart)
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Ошибка сервера: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-
-        api.createDonation(dateBody, typeBody, filePart)
     }
 }

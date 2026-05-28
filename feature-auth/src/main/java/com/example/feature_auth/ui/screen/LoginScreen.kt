@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,59 +48,75 @@ fun LoginApp(
 
     val focusManager = LocalFocusManager.current
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 60.dp, start = 16.dp, end = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                value = login,
-                onValueChange = {
-                    login = it
-                    viewModel.clearError()
-                },
-                label = { Text(stringResource(R.string.username)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                    viewModel.clearError()
-                },
-                label = { Text(stringResource(R.string.password)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-
-        if (errorMessage != null) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error)
-        }
-
-        Spacer(modifier = Modifier.height(64.dp))
-
-        Button(
-            onClick = {
-                viewModel.login(login, password, onLoginSuccess)
-            },
-            enabled = !isLoading,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 60.dp, start = 16.dp, end = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = if (isLoading) "Вход..." else stringResource(R.string.login))
-        }
+            Column(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = login,
+                    onValueChange = {
+                        login = it
+                        viewModel.clearError()
+                    },
+                    label = { Text(stringResource(R.string.username)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(onClick = onNavigateToRegister) {
-            Text("Еще нет аккаунта? Зарегистрироваться")
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        viewModel.clearError()
+                    },
+                    label = { Text(stringResource(R.string.password)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            if (errorMessage != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(text = errorMessage!!, color = MaterialTheme.colorScheme.error)
+            }
+
+            Spacer(modifier = Modifier.height(64.dp))
+
+            Button(
+                onClick = {
+                    viewModel.login(login, password, onLoginSuccess)
+                },
+                enabled = !isLoading,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = if (isLoading) "Вход..." else stringResource(R.string.login))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(onClick = onNavigateToRegister) {
+
+
+                Text(
+                    text = "Еще нет аккаунта? Зарегистрироваться",
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
@@ -108,6 +125,15 @@ fun LoginApp(
 @Preview
 fun LoginPreview() {
     DonorTrackTheme {
+        LoginApp()
+    }
+}
+
+
+@Composable
+@Preview
+fun LoginPreviewDark() {
+    DonorTrackTheme(darkTheme = true) {
         LoginApp()
     }
 }

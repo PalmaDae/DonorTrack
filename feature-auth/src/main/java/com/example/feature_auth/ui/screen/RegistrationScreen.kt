@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -55,12 +57,14 @@ fun RegisterApp(
         }
     }
 
-    Box(
-        modifier = modifier.fillMaxSize()
+
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
         Column(
             modifier = Modifier
-                .align(Alignment.TopCenter)
+                .fillMaxSize()
                 .padding(top = 60.dp, start = 16.dp, end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -120,7 +124,12 @@ fun RegisterApp(
             Spacer(modifier = Modifier.height(32.dp))
 
             if (currentError != null) {
-                Text(text = currentError)
+
+                Text(
+                    text = currentError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
@@ -142,7 +151,11 @@ fun RegisterApp(
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = onNavigateToLogin) {
-                Text("Уже есть аккаунт? Войти")
+
+                Text(
+                    text = "Уже есть аккаунт? Войти",
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         }
     }
@@ -152,6 +165,15 @@ fun RegisterApp(
 @Preview
 fun RegisterPreview() {
     DonorTrackTheme {
+        RegisterApp()
+    }
+}
+
+
+@Composable
+@Preview
+fun RegisterPreviewDark() {
+    DonorTrackTheme(darkTheme = true) {
         RegisterApp()
     }
 }

@@ -8,12 +8,11 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 
 interface DonationAPI {
-
     @Multipart
-    @POST("api/donation/create")
-    suspend fun createDonation(
+    @POST("api/v1/profile/donations")
+    suspend fun addDonation(
         @Part("date") date: RequestBody,
-        @Part("type") type: RequestBody,
-        @Part certificate: MultipartBody.Part?
+        @Part("donationType") donationType: RequestBody,
+        @Part certificateFile: MultipartBody.Part?
     ): Response<Unit>
 }

@@ -1,36 +1,63 @@
 package com.example.data.remote
 
+import com.example.data.network.AuthEventBus
+import com.example.data.network.AuthEvent
 import com.example.data.remote.api.AuthAPI
 import com.example.data.remote.api.DonationAPI
 import com.example.data.remote.api.DonorAPI
+import com.example.data.remote.api.ScannerApi
 import com.example.data.remote.api.UserAPI
-import com.franmontiel.persistentcookiejar.PersistentCookieJar
-import com.franmontiel.persistentcookiejar.cache.SetCookieCache
-import com.franmontiel.persistentcookiejar.persistence.CookiePersistor
-import okhttp3.Cookie
+import okhttp3.Interceptor
+import okhttp3.JavaNetCookieJar
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.getValue
+import java.net.CookieManager
+import java.net.CookiePolicy
 
 object RetrofitHelper {
     private const val DONOR_URL = "https://api2.donorsearch.org/api/"
-    private const val AUTH_URL = "http://10.0.2.2:8080/"
+    val AUTH_URL = "http://192.168.0.116:8080/api/v1/"
 
 
+    private val cookieManager = CookieManager().apply {
+        setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+    }
 
-    private val cookieJar = PersistentCookieJar(
-        SetCookieCache(),
-        object : CookiePersistor {
-            private val cookies = mutableListOf<Cookie>()
-            override fun saveAll(cookies: Collection<Cookie>) { this.cookies.addAll(cookies) }
-            override fun loadAll(): List<Cookie> = cookies
-            override fun removeAll(cookies: Collection<Cookie>) { this.cookies.removeAll(cookies) }
-            override fun clear() { this.cookies.clear() }
+
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.HEADERS
+    }
+
+
+    private val authInterceptor = Interceptor { chain ->
+        val request = chain.request()
+        val response = chain.proceed(request)
+
+
+        if (response.code == 401) {
+            AuthEventBus.emit(AuthEvent.UNAUTHORIZED)
         }
-    )
-    private val authClient = okhttp3.OkHttpClient.Builder()
-        .cookieJar(cookieJar)
+
+        response
+    }
+
+
+    private val authClient = OkHttpClient.Builder()
+        .cookieJar(JavaNetCookieJar(cookieManager))
+        .addInterceptor(authInterceptor)
+        .addInterceptor(loggingInterceptor)
         .build()
+
+
+    private val authRetrofit = Retrofit.Builder()
+        .baseUrl(AUTH_URL)
+        .client(authClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+
 
 
     val donorAPI: DonorAPI by lazy {
@@ -41,28 +68,9 @@ object RetrofitHelper {
             .create(DonorAPI::class.java)
     }
 
-    val authAPI: AuthAPI by lazy { createAuthApi() }
-    val donationAPI: DonationAPI by lazy { createDonationApi() }
-    val userAPI: UserAPI by lazy { createUserApi() }
 
-    private fun createAuthApi() = Retrofit.Builder()
-        .baseUrl(AUTH_URL)
-        .client(authClient)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(AuthAPI::class.java)
-
-    private fun createDonationApi() = Retrofit.Builder()
-        .baseUrl(AUTH_URL)
-        .client(authClient)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(DonationAPI::class.java)
-
-    private fun createUserApi() = Retrofit.Builder()
-        .baseUrl(AUTH_URL)
-        .client(authClient)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(UserAPI::class.java)
+    val authAPI: AuthAPI by lazy { authRetrofit.create(AuthAPI::class.java) }
+    val donationAPI: DonationAPI by lazy { authRetrofit.create(DonationAPI::class.java) }
+    val userAPI: UserAPI by lazy { authRetrofit.create(UserAPI::class.java) }
+    val scannerAPI: ScannerApi by lazy { authRetrofit.create(ScannerApi::class.java) }
 }

@@ -47,6 +47,10 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":feature-common"))
     implementation(project(":feature-add-donation"))
+    implementation(project(":feature-map"))
+    implementation(project(":feature-calendar"))
+    implementation(project(":feature-scanner"))
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -56,7 +60,12 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.activity.compose)
 
-    implementation(libs.androidx.compose.navigation)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
+    implementation(libs.androidx.compose.navigation)
+    implementation(libs.androidx.compose.icons.extended)
 }

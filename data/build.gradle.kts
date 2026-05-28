@@ -33,16 +33,16 @@ android {
 }
 
 dependencies {
-    implementation("androidx.room:room-runtime:2.8.4")
-    implementation("androidx.room:room-ktx:2.8.4")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
 
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
-    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
-    implementation("com.google.code.gson:gson:2.8.7")
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
 
-    implementation("org.mindrot:jbcrypt:0.4")
+    implementation(libs.okhttp.urlconnection)
+    implementation(libs.okhttp.logging.interceptor)
 
+    implementation(libs.jbcrypt)
     implementation(project(":domain"))
-
-    implementation("com.github.franmontiel:PersistentCookieJar:v1.0.1")
 }

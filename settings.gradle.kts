@@ -17,6 +17,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
+
+
+        maven {
+            url = uri("https://maven.yandex.cloud/nexus/content/repositories/releases/")
+        }
     }
 }
 
@@ -28,3 +33,6 @@ include(":feature-auth")
 include(":feature-main")
 include(":feature-common")
 include(":feature-add-donation")
+include(":feature-map")
+include(":feature-calendar")
+include(":feature-scanner")

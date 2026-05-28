@@ -1,11 +1,11 @@
 package com.example.data.remote.model
 
 data class ProfileDTO(
-    val username: String,
-    val email: String,
+    val username: String?,
+    val email: String?,
     val bloodType: String?,
     val city: String?,
-    val donations: List<NetworkDonationEntity>
+    val donations: List<NetworkDonationEntity>?
 )
 
 data class CityChangeDto(
